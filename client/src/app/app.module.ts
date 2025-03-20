@@ -20,13 +20,23 @@ import { AlmacenistaService } from './services/almacenista.service';
 import { ImageUploadService } from './services/image-upload.service';
 
 import { AppComponent } from './app.component';
+import { ProductosComponent } from './productos/productos.component';
+import { GestionProductoModalComponent } from './gestion-producto-modal/gestion-producto-modal.component';
+import { CommonModule } from '@angular/common';
+import { VendedorPasilloComponent } from './vendedor-pasillo/vendedor-pasillo.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NotificacionesComponent } from './notificaciones.component';
+
+
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     FooterComponent,
-    AlmacenistaComponent
+    AlmacenistaComponent,
+    VendedorPasilloComponent,
+
     // Elimina InventarioComponent de las declaraciones
   ],
   imports: [
@@ -34,7 +44,10 @@ import { AppComponent } from './app.component';
     FormsModule,
     RouterModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    ProductosComponent,
+    CommonModule,
+    NotificacionesComponent
     // Si necesitas usar InventarioComponent en rutas, déjalo configurado en AppRoutingModule
   ],
   providers: [

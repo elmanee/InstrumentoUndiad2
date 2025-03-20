@@ -1,0 +1,320 @@
+<div class="wrapper">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary header">
+    <div class="container-fluid">
+      <a class="navbar-brand d-flex align-items-center" routerLink="/dashboard">
+        <img src="assets/logo.png" alt="Logo" class="logo me-2">
+        <span class="title">Sistema de Productos</span>
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-3">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/dashboard">
+              <i class="bi bi-plus-circle"></i> Inicio
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/dashboard/agregar">
+              <i class="bi bi-plus-circle"></i> Agregar
+            </a>
+          </li>
+        </ul>
+
+
+
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-4">
+
+
+
+    <!-- Mensaje de error -->
+    <div *ngIf="errorCarga" class="alert alert-danger">
+      <i class="bi bi-exclamation-triangle-fill"></i> {{ mensajeError }}
+    </div>
+
+    <!-- Indicador de carga -->
+    <div *ngIf="cargando" class="text-center my-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+      <p class="mt-2">Cargando productos...</p>
+    </div>
+
+    <div class="container mt-4">
+      <h2 class="text-center mb-4">Catálogo de Productos</h2>
+
+      <!-- Sección de filtros -->
+      <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">Filtros de búsqueda</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <!-- Filtro por nombre -->
+            <div class="col-md-6 mb-3">
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Buscar por nombre..."
+                  [(ngModel)]="nombreFiltro"
+                  (keyup)="onBuscarKeyUp($event)">
+                <button class="btn btn-outline-primary" type="button" (click)="filtrarPorNombre()">
+                  <i class="bi bi-search"></i> Buscar
+                </button>
+              </div>
+            </div>
+
+            <!-- Filtro por marca -->
+            <div class="col-md-3 mb-3">
+              <select class="form-select" [(ngModel)]="marcaSeleccionada" (change)="filtrarPorMarca(marcaSeleccionada)">
+                <option value="">Todas las marcas</option>
+                <option *ngFor="let marca of marcas" [value]="marca">{{ marca }}</option>
+              </select>
+            </div>
+
+            <!-- Filtro por tamaño -->
+            <div class="col-md-3 mb-3">
+              <select class="form-select" [(ngModel)]="tamanioSeleccionado" (change)="filtrarPorTamanio(tamanioSeleccionado)">
+                <option value="">Todos los tamaños</option>
+                <option *ngFor="let tamanio of tamanios" [value]="tamanio">{{ tamanio }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row">
+            <!-- Filtro por rango de precio -->
+            <div class="col-md-8 mb-3">
+              <label class="form-label">Rango de precio (${{ precioMinimo }} - ${{ precioMaximo }})</label>
+              <div class="d-flex">
+                <input
+                  type="range"
+                  class="form-range me-2"
+                  min="0"
+                  max="500"
+                  step="10"
+                  [(ngModel)]="precioMinimo">
+                <input
+                  type="range"
+                  class="form-range"
+                  min="500"
+                  max="2000"
+                  step="10"
+                  [(ngModel)]="precioMaximo">
+              </div>
+            </div>
+
+            <div class="col-md-4 d-flex align-items-end justify-content-end mb-3">
+              <button class="btn btn-primary me-2" (click)="filtrarPorPrecio()">
+                <i class="bi bi-funnel"></i> Aplicar filtros
+              </button>
+              <button class="btn btn-outline-secondary" (click)="limpiarFiltros()">
+                <i class="bi bi-x-circle"></i> Limpiar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mensaje de error -->
+      <div *ngIf="errorCarga" class="alert alert-danger">
+        <i class="bi bi-exclamation-triangle-fill"></i> {{ mensajeError }}
+      </div>
+
+      <!-- Indicador de carga -->
+      <div *ngIf="cargando" class="text-center my-5 overlay-spinner">
+        <div class="spinner-container">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+          </div>
+          <p class="mt-2">Cargando productos...</p>
+        </div>
+      </div>
+
+      <!-- Grid de productos -->
+      <div [class.loading]="cargando">
+        <div *ngIf="productosFiltrados.length === 0 && !cargando" class="alert alert-info text-center">
+          <i class="bi bi-info-circle"></i> No se encontraron productos con los criterios seleccionados.
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
+          <div class="col" *ngFor="let producto of productosFiltrados">
+            <div class="card h-100 producto-card">
+              <div class="position-relative">
+                <img
+                  [src]="producto.imagen ? 'http://localhost:3000' + producto.imagen : 'assets/img/placeholder.png'"
+                  class="card-img-top producto-imagen"
+                  [alt]="producto.nombre_producto"
+                  loading="lazy"
+                  onerror="this.onerror=null; this.src='assets/img/placeholder.png'">
+
+                <div *ngIf="producto.precio_kg > 0" class="badge bg-danger position-absolute top-0 end-0 m-2">
+                  Por Kg
+                </div>
+              </div>
+
+              <div class="card-body">
+                <h5 class="card-title">{{ producto.nombre_producto }}</h5>
+                <p class="card-text text-muted">{{ producto.descripcion }}</p>
+
+                <div class="producto-detalles">
+                  <span class="badge bg-primary">{{ producto.marca }}</span>
+                  <span class="badge bg-secondary">{{ producto.tamanio }}</span>
+                </div>
+
+                <div class="mt-3">
+                  <div *ngIf="producto.precio_pieza > 0" class="precio-container">
+                    <span class="precio-etiqueta">Precio por pieza:</span>
+                    <span class="precio-valor">${{ producto.precio_pieza.toFixed(2) }}</span>
+                  </div>
+
+                  <div *ngIf="producto.precio_kg > 0" class="precio-container">
+                    <span class="precio-etiqueta">Precio por kg:</span>
+                    <span class="precio-valor">${{ producto.precio_kg.toFixed(2) }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-footer">
+                <button class="btn btn-primary w-100" (click)="verDetalles(producto)">
+                  <i class="bi bi-eye"></i> Ver detalles
+                </button>
+              </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-links">
+          <a routerLink="/dashboard">Inicio</a>
+          <a href="#">Acerca de</a>
+          <a href="#">Servicios</a>
+          <a href="#">Contacto</a>
+        </div>
+        <div class="footer-social">
+          <a href="#"><i class="fab fa-facebook"></i></a>
+          <a href="#"><i class="Efab fa-AEtwitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+      </div>
+      <p class="footer-text">&copy; 2024 CARNICERÍA UTNG</p>
+    </div>
+  </footer>
+
+
+<div class="modal fade" id="detalleProductoModal" tabindex="-1" aria-labelledby="detalleProductoModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" *ngIf="productoSeleccionado">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="detalleProductoModalLabel">Detalles del Producto</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-5">
+            <img [src]="productoSeleccionado.imagen ? apiUrl + productoSeleccionado.imagen : 'assets/img/placeholder.png'"
+                 class="img-fluid rounded"
+                 [alt]="productoSeleccionado.nombre_producto"
+                 onerror="this.onerror=null; this.src='assets/img/placeholder.png'">
+          </div>
+          <div class="col-md-7">
+            <h4 class="mb-3">{{productoSeleccionado.nombre_producto}}</h4>
+
+            <div class="detalles-info">
+              <div class="detalle-item">
+                <span class="detalle-label">Código de barras:</span>
+                <span class="detalle-valor">{{productoSeleccionado.codigo_barras}}</span>
+              </div>
+
+              <div class="detalle-item">
+                <span class="detalle-label">Marca:</span>
+                <span class="detalle-valor">{{productoSeleccionado.marca}}</span>
+              </div>
+
+              <div class="detalle-item">
+                <span class="detalle-label">Tamaño:</span>
+                <span class="detalle-valor">{{productoSeleccionado.tamanio}}</span>
+              </div>
+
+              <div class="detalle-item" *ngIf="productoSeleccionado.pasillo">
+                <span class="detalle-label">Pasillo:</span>
+                <span class="detalle-valor">{{productoSeleccionado.pasillo}}</span>
+              </div>
+
+              <div class="detalle-item" *ngIf="productoSeleccionado.existencia_exhibe">
+                <span class="detalle-label">Existencia en exhibidor:</span>
+                <span class="detalle-valor">{{productoSeleccionado.existencia_exhibe}}</span>
+              </div>
+
+              <div class="detalle-item" *ngIf="productoSeleccionado.precio_caja">
+                <span class="detalle-label">Precio por caja:</span>
+                <span class="detalle-valor">${{productoSeleccionado.precio_caja}}</span>
+              </div>
+
+              <div class="detalle-item" *ngIf="productoSeleccionado.precio_pieza > 0">
+                <span class="detalle-label">Precio por pieza:</span>
+                <span class="detalle-valor">${{productoSeleccionado.precio_pieza.toFixed(2)}}</span>
+              </div>
+
+              <div class="detalle-item" *ngIf="productoSeleccionado.precio_kg > 0">
+                <span class="detalle-label">Precio por kg:</span>
+                <span class="detalle-valor">${{productoSeleccionado.precio_kg.toFixed(2)}}</span>
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <h5>Descripción:</h5>
+              <p>{{productoSeleccionado.descripcion}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Cambiar todas las instancias de (click)="cerrarModal(null)" -->
+
+<!-- Y en los botones de Cancelar -->
+<button
+class="btn btn-secondary"
+(click)="cerrarModal(false)"> <!-- Cambiado de null a false -->
+Cancelar
+</button>
+    </div>
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-links">
+            <a routerLink="/dashboard">Inicio</a>
+            <a href="#">Acerca de</a>
+            <a href="#">Servicios</a>
+            <a href="#">Contacto</a>
+          </div>
+          <div class="footer-social">
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="Efab fa-AEtwitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+          </div>
+        </div>
+        <p class="footer-text">&copy; 2024 CARNICERÍA UTNG</p>
+      </div>
+    </footer>
+  </div>
+
+
+</div>
+
+
+</div>

@@ -6,11 +6,13 @@ import {
   obtenerProductosTamanio,
   obtenerProductosPasillo,
   obtenerProductosPrecio,
-  actualizarExhibe
+  actualizarExhibe,
+  obtenerProductos
 } from '../controllers/vendedorControllers'
 
 const router = Router();
 
+router.get('/obtener_productos', obtenerProductos);
 router.get('/obtener_producto/nombre/:nombre_producto',obtenerProductosNombre);
 router.get('/obtener_producto/codigo/:codigo_barras', obtenerProductoPorCodigo)
 router.get('/obtener_producto/marca/:marca', obtenerProductosMarca);
