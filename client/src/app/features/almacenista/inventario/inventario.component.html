@@ -1,0 +1,86 @@
+<!-- Inventario de Productos -->
+<div class="container-fluid mt-4">
+  <!-- Encabezado -->
+  <div class="row mb-4">
+    <div class="col-md-8">
+      <h2>Inventario de Productos</h2>
+    </div>
+    <div class="col-md-4 text-end">
+      <button class="btn btn-success" routerLink="/agregar-producto">
+        <i class="fas fa-plus"></i> Agregar Producto
+      </button>
+    </div>
+  </div>
+
+  <!-- Spinner de carga -->
+  <div class="row justify-content-center my-5" *ngIf="cargando">
+    <div class="col-auto">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mensaje de error -->
+  <div class="alert alert-danger" *ngIf="error">
+    {{ error }}
+  </div>
+
+  <!-- Mensaje de no productos -->
+  <div class="alert alert-info" *ngIf="!cargando && !error && productos.length === 0">
+    No hay productos en el inventario. Comienza agregando uno nuevo.
+  </div>
+
+  <!-- Grid de Productos -->
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4" *ngIf="!cargando && productos.length > 0">
+    <!-- Tarjeta de Producto -->
+    <div class="col" *ngFor="let producto of productos">
+      <div class="card h-100 shadow-sm">
+        <!-- Imagen del producto -->
+        <div class="text-center p-3" style="height: 180px; background-color: #f8f9fa;">
+          <!-- Mostrar imágenes usando el método getImageUrl -->
+          <img
+            *ngIf="producto.imagen"
+            [src]="'http://localhost:3000' + getImageUrl(producto.imagen)"
+            class="img-fluid h-100"
+            [alt]="producto.nombre_producto"
+            style="object-fit: contain;">
+
+          <!-- Mostrar placeholder cuando no hay imagen -->
+          <div *ngIf="!producto.imagen"
+               class="d-flex h-100 align-items-center justify-content-center">
+            <i class="fas fa-box fa-3x text-secondary"></i>
+          </div>
+        </div>
+
+        <!-- Información básica -->
+        <div class="card-body">
+          <!-- Código de barras -->
+          <p class="card-text small text-muted mb-1">ID: {{ producto.codigo_barras }}</p>
+
+          <!-- Nombre del producto -->
+          <h5 class="card-title text-truncate">{{ producto.nombre_producto }}</h5>
+
+          <!-- Estado del producto -->
+          <div class="mt-2">
+            <span class="badge" [ngClass]="getClaseEstado(producto)">
+              {{ getEstadoProducto(producto) }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Acciones -->
+        <div class="card-footer bg-white border-top-0">
+          <div class="d-flex justify-content-between">
+            <button class="btn btn-sm btn-outline-primary" [routerLink]="['/editar-producto', producto.codigo_barras]">
+              <i class="fas fa-edit"></i> Editar
+            </button>
+            <button class="btn btn-sm btn-outline-danger" (click)="eliminarProducto(producto.codigo_barras)">
+              <i class="fas fa-trash"></i> Eliminar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

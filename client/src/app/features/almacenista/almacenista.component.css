@@ -1,0 +1,43 @@
+/* almacenista.component.css - Estilos para la pantalla del almacenista */
+
+/* Estilos para las tarjetas */
+.card {
+  transition: transform 0.2s ease-in-out;
+  border-radius: 8px;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-header {
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.card-title {
+  color: #212529;
+  font-weight: 600;
+}
+
+/* Estilos para los botones de acción */
+.btn-primary {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+.btn-primary:hover {
+  background-color: #0b5ed7;
+  border-color: #0a58ca;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+  .container {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .card-title {
+    font-size: 1.25rem;
+  }
+}
