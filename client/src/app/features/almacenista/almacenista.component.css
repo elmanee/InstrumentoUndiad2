@@ -1,22 +1,182 @@
 /* almacenista.component.css - Estilos para la pantalla del almacenista */
 
-/* Estilos para las tarjetas */
-.card {
-  transition: transform 0.2s ease-in-out;
-  border-radius: 8px;
+.dashboard-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-.card:hover {
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Navbar */
+
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 1rem 2rem;
+}
+
+.branding {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+}
+
+.logo {
+  height: 40px;
+  width: auto;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1.5rem;
+  margin-left: 2rem;
+}
+
+.nav-links .nav-item .nav-link {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+}
+
+.nav-links .nav-item .nav-link.active {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.search-bar select {
+  appearance: none; /* Oculta el diseño por defecto del select */
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 8px 30px 8px 10px; /* Espacio a la derecha para la flecha */
+  font-size: 16px;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  position: relative;
+  width: 200px; /* Ajusta el ancho según tu diseño */
+}
+
+/* Agrega un ícono de flecha personalizado */
+.search-bar {
+  position: relative;
+}
+
+.search-bar select::after {
+  content: "▼"; /* Símbolo de flecha */
+  font-size: 14px;
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.dropdown-toggle {
+  color: white;
+}
+
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  background-color: #faf8f8;
+}
+
+/* Cards */
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboard-card {
+  transition: all 0.3s ease-in-out;
+}
+
+.dashboard-card:hover {
   transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.card-header {
-  border-bottom: 1px solid rgba(0,0,0,0.1);
+.card-icon {
+  font-size: 40px;
+  width: 40px;
+  height: 40px;
+  color: #007bff;
+  margin-right: 1rem;
 }
 
-.card-title {
-  color: #212529;
-  font-weight: 600;
+.card p {
+  color: #6c757d;
+  margin-top: 1rem;
+}
+
+.btn-secondary {
+  margin-left: 10%;
+}
+
+/* Estilos Footer */
+
+.main-content {
+  flex: 1;
+}
+
+.footer {
+  background: #343a40;
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+  position: relative;
+  width: 100%;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.footer-links a {
+  color: white;
+  margin: 0 15px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
+
+.footer-social a {
+  color: white;
+  margin: 0 10px;
+  font-size: 20px;
+}
+
+.footer-text {
+  margin-top: 10px;
+  font-size: 14px;
 }
 
 /* Estilos para los botones de acción */

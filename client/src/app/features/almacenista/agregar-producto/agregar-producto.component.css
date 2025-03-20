@@ -1,28 +1,28 @@
-* {
-  box-sizing: border-box;
-  font-family: "Century Gothic", sans-serif;
-}
-
 .container {
   background: white;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 700px;
+  box-shadow: 0 4px 50px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  margin-bottom: 3%;
 }
 
 .header {
-  display: flex;
-  align-items: center;
-  background: #ddd;
-  padding: 10px;
-  font-size: 20px;
-  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.header img {
+.header-logo {
   width: 40px;
   height: 40px;
-  margin-right: 10px;
+}
+
+.nav-link {
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
 }
 
 .form-container {
@@ -37,6 +37,10 @@
 
 .form-right {
   width: 40%;
+  text-align: center;
+}
+
+h2 {
   text-align: center;
 }
 
@@ -103,4 +107,8 @@ select {
   background: #333;
   align-content: center;
   width: 200px;
+}
+
+.guardar {
+  margin-bottom: 3%;
 }

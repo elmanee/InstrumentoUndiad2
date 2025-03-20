@@ -1,361 +1,279 @@
+<header class="header">
+  <div class="container-fluid bg-primary py-3">
+    <div class="row align-items-center">
+      <!-- Logo y Título -->
+      <div class="col-md-6 d-flex align-items-center">
+        <img src="../assets/logo.png" alt="Logo Carnicería" class="header-logo me-3" />
+        <h1 class="text-white mb-0">Sistema de Productos</h1>
+      </div>
+
+      <!-- Barra de búsqueda y filtros -->
+      
+    </div>
+
+    <!-- Menú de navegación -->
+    <div class="row mt-2">
+      <div class="col">
+        <nav class="nav">
+          <a class="nav-link text-white" href="/almacenista">Inicio</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</header>
 
 <div class="container mt-4">
   <form (ngSubmit)="guardarProducto()" #productoForm="ngForm">
-    <!-- Sección 1 - Datos básicos -->
-    <div class="row g-3">
-      <div class="col-md-6">
-        <label class="form-label">Código de barras:</label>
-        <input
-          type="text"
-          class="form-control"
-          name="codigo_barras"
-          [(ngModel)]="producto.codigo_barras"
-          required
-          #codigoBarras="ngModel"
-          minlength="5">
-        <div
-          *ngIf="codigoBarras.invalid && (codigoBarras.dirty || codigoBarras.touched)"
-          class="text-danger">
-          <small *ngIf="codigoBarras.errors?.['required']">
-            El código de barras es obligatorio
-          </small>
-          <small *ngIf="codigoBarras.errors?.['minlength']">
-            Debe tener al menos 5 caracteres
-          </small>
+    <div class="row">
+      <!-- Columna 1: Datos del producto -->
+      <div class="col-md-8">
+        <!-- Sección 1 - Datos básicos -->
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Código de barras:</label>
+            <input type="text" class="form-control" name="codigo_barras" [(ngModel)]="producto.codigo_barras" required
+              #codigoBarras="ngModel" minlength="5">
+            <div *ngIf="codigoBarras.invalid && (codigoBarras.dirty || codigoBarras.touched)" class="text-danger">
+              <small *ngIf="codigoBarras.errors?.['required']">
+                El código de barras es obligatorio
+              </small>
+              <small *ngIf="codigoBarras.errors?.['minlength']">
+                Debe tener al menos 5 caracteres
+              </small>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Nombre:</label>
+            <input type="text" class="form-control" name="nombre" [(ngModel)]="producto.nombre_producto" required
+              #nombre="ngModel">
+            <div *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)" class="text-danger">
+              El nombre es obligatorio
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Marca:</label>
+            <select class="form-select" name="marca" [(ngModel)]="producto.marca" required #marca="ngModel">
+              <option value="">Seleccionar marca</option>
+              <option>SuKarne</option>
+              <option>Sigma Alimentos</option>
+              <option>Bafar</option>
+              <option>FUD</option>
+              <option>Capistrano</option>
+            </select>
+            <div *ngIf="marca.invalid && (marca.dirty || marca.touched)" class="text-danger">
+              Selecciona una marca
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Tamaño:</label>
+            <select class="form-select" name="tamanio" [(ngModel)]="producto.tamanio" required #tamanio="ngModel">
+              <option value="">Seleccionar tamaño</option>
+              <option>1 kg</option>
+              <option>500 gr</option>
+              <option>250 gr</option>
+              <option>100 gr</option>
+            </select>
+            <div *ngIf="tamanio.invalid && (tamanio.dirty || tamanio.touched)" class="text-danger">
+              Selecciona un tamaño
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <label class="form-label">Categoría:</label>
+            <select class="form-select" name="categoria" [(ngModel)]="producto.categoria" required #categoria="ngModel">
+              <option value="">Seleccionar categoría</option>
+              <option>Cerdo</option>
+              <option>Pescado</option>
+              <option>Pollo</option>
+              <option>Res</option>
+            </select>
+            <div *ngIf="categoria.invalid && (categoria.dirty || categoria.touched)" class="text-danger">
+              Selecciona una categoría
+            </div>
+          </div>
+        </div>
+
+        <!-- Sección 5 - Proveedores -->
+        <div class="row mt-4 border-top pt-3">
+          <div class="col-12">
+            <label class="form-label">Proveedores:</label>
+            <select class="form-select" multiple name="proveedores" [(ngModel)]="producto.proveedores"
+              #proveedores="ngModel">
+              <option value="SuKarne">SuKarne</option>
+              <option value="Sigma Alimentos">Sigma Alimentos</option>
+              <option value="Grupo Bafar">Grupo Bafar</option>
+              <option value="Marindustrias">Marindustrias</option>
+              <option value="Pescanova">Pescanova</option>
+              <option value="JBS USA">JBS USA</option>
+              <option value="Cargill Meat Solutions">Cargill Meat Solutions</option>
+              <option value="Tyson Foods">Tyson Foods</option>
+            </select>
+            <small class="text-muted">
+              Mantén presionada la tecla Ctrl (o Cmd en Mac) para seleccionar más de un proveedor.
+            </small>
+          </div>
+        </div>
+
+        <!-- Sección 2 - Precios -->
+        <div class="row mt-4 border-top pt-3 g-3">
+          <div class="col-md-3">
+            <label class="form-label">Precio pieza:</label>
+            <div class="input-group">
+              <span class="input-group-text">$</span>
+              <input type="number" class="form-control" name="precio_pieza" [(ngModel)]="producto.precio_pieza"
+                #precioPieza="ngModel" min="0" required>
+            </div>
+            <div *ngIf="precioPieza.invalid && (precioPieza.dirty || precioPieza.touched)" class="text-danger">
+              <small *ngIf="precioPieza.errors?.['required']">
+                Precio de pieza es obligatorio
+              </small>
+              <small *ngIf="precioPieza.errors?.['min']">
+                Precio debe ser mayor o igual a 0
+              </small>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">Precio caja:</label>
+            <div class="input-group">
+              <span class="input-group-text">$</span>
+              <input type="number" class="form-control" name="precio_caja" [(ngModel)]="producto.precio_caja"
+                #precioCaja="ngModel" min="0" required>
+            </div>
+            <div *ngIf="precioCaja.invalid && (precioCaja.dirty || precioCaja.touched)" class="text-danger">
+              <small *ngIf="precioCaja.errors?.['required']">
+                Precio de caja es obligatorio
+              </small>
+              <small *ngIf="precioCaja.errors?.['min']">
+                Precio debe ser mayor o igual a 0
+              </small>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">Cantidad caja:</label>
+            <input type="number" class="form-control" name="cantidad_caja" [(ngModel)]="producto.cantidad_caja"
+              #cantidadCaja="ngModel" min="1" required>
+            <div *ngIf="cantidadCaja.invalid && (cantidadCaja.dirty || cantidadCaja.touched)" class="text-danger">
+              <small *ngIf="cantidadCaja.errors?.['required']">
+                Cantidad de caja es obligatoria
+              </small>
+              <small *ngIf="cantidadCaja.errors?.['min']">
+                Cantidad debe ser mayor a 0
+              </small>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">Pasillo:</label>
+            <input type="number" class="form-control" name="pasillo" [(ngModel)]="producto.pasillo" #posillo="ngModel"
+              min="0" required>
+            <div *ngIf="posillo.invalid && (posillo.dirty || posillo.touched)" class="text-danger">
+              <small *ngIf="posillo.errors?.['required']">
+                Posillo es obligatorio
+              </small>
+              <small *ngIf="posillo.errors?.['min']">
+                Posillo debe ser mayor o igual a 0
+              </small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sección 3 - Existencias -->
+        <div class="row mt-4 border-top pt-3 g-3">
+          <div class="col-md-6">
+            <label class="form-label">Existencia en almacén:</label>
+            <input type="number" class="form-control" name="existencia_almacen"
+              [(ngModel)]="producto.existencia_almacen" #existenciaAlmacen="ngModel" min="0" required>
+            <div *ngIf="existenciaAlmacen.invalid && (existenciaAlmacen.dirty || existenciaAlmacen.touched)"
+              class="text-danger">
+              <small *ngIf="existenciaAlmacen.errors?.['required']">
+                Existencia en almacén es obligatoria
+              </small>
+              <small *ngIf="existenciaAlmacen.errors?.['min']">
+                Existencia debe ser mayor o igual a 0
+              </small>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Stock en almacén:</label>
+            <input type="number" class="form-control" name="stock_almacen" [(ngModel)]="producto.stock_almacen"
+              #stockAlmacen="ngModel" min="0" required>
+            <div *ngIf="stockAlmacen.invalid && (stockAlmacen.dirty || stockAlmacen.touched)" class="text-danger">
+              <small *ngIf="stockAlmacen.errors?.['required']">
+                Stock en almacén es obligatorio
+              </small>
+              <small *ngIf="stockAlmacen.errors?.['min']">
+                Stock debe ser mayor o igual a 0
+              </small>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Existencia en exhibición:</label>
+            <input type="number" class="form-control" name="existencia_exhibe" [(ngModel)]="producto.existencia_exhibe"
+              #existenciaExhibicion="ngModel" min="0" required>
+            <div *ngIf="existenciaExhibicion.invalid && (existenciaExhibicion.dirty || existenciaExhibicion.touched)"
+              class="text-danger">
+              <small *ngIf="existenciaExhibicion.errors?.['required']">
+                Existencia en exhibición es obligatoria
+              </small>
+              <small *ngIf="existenciaExhibicion.errors?.['min']">
+                Existencia debe ser mayor o igual a 0
+              </small>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label">Stock en exhibición:</label>
+            <input type="number" class="form-control" name="stock_exhibicion" [(ngModel)]="producto.stock_exhibe"
+              #stockExhibicion="ngModel" min="0" required>
+            <div *ngIf="stockExhibicion.invalid && (stockExhibicion.dirty || stockExhibicion.touched)"
+              class="text-danger">
+              <small *ngIf="stockExhibicion.errors?.['required']">
+                Stock en exhibición es obligatorio
+              </small>
+              <small *ngIf="stockExhibicion.errors?.['min']">
+                Stock debe ser mayor o igual a 0
+              </small>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="col-md-6">
-        <label class="form-label">Nombre:</label>
-        <input
-          type="text"
-          class="form-control"
-          name="nombre"
-          [(ngModel)]="producto.nombre_producto"
-          required
-          #nombre="ngModel">
-        <div
-          *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)"
-          class="text-danger">
-          El nombre es obligatorio
-        </div>
-      </div>
-
+      <!-- Columna 2: Imagen del producto -->
       <div class="col-md-4">
-        <label class="form-label">Marca:</label>
-        <select
-          class="form-select"
-          name="marca"
-          [(ngModel)]="producto.marca"
-          required
-          #marca="ngModel">
-          <option value="">Seleccionar marca</option>
-          <option>SuKarne</option>
-          <option>Sigma Alimentos</option>
-          <option>Bafar</option>
-          <option>FUD</option>
-          <option>Capistrano</option>
-        </select>
-        <div
-          *ngIf="marca.invalid && (marca.dirty || marca.touched)"
-          class="text-danger">
-          Selecciona una marca
-        </div>
-      </div>
+        <!-- Sección 4 - Imagen -->
+        <div class="row">
+          <div class="col-12">
+            <label class="form-label">Imagen del producto:</label>
+            <small class="text-muted">
+              {{ imagenSeleccionada ? imagenSeleccionada.name : 'Ningún archivo seleccionado' }}
+            </small>
 
-      <div class="col-md-4">
-        <label class="form-label">Tamaño:</label>
-        <select
-          class="form-select"
-          name="tamanio"
-          [(ngModel)]="producto.tamanio"
-          required
-          #tamanio="ngModel">
-          <option value="">Seleccionar tamaño</option>
-          <option>1 kg</option>
-          <option>500 gr</option>
-          <option>250 gr</option>
-          <option>100 gr</option>
-        </select>
-        <div
-          *ngIf="tamanio.invalid && (tamanio.dirty || tamanio.touched)"
-          class="text-danger">
-          Selecciona un tamaño
-        </div>
-      </div>
+            <!-- Imagen de vista previa -->
+            <div *ngIf="imagenPreview">
+              <img [src]="imagenPreview" alt="Vista previa" style="max-width: 100%; margin-top: 10px;">
+            </div>
+            <div class="input-group">
+              <input type="file" class="form-control" name="imagen" (change)="onFileSelected($event)" accept="image/*">
+              <input #fileInput type="file" style="display: none;" (change)="onFileSelected($event)" accept="image/*">
+            </div>
 
-      <div class="col-md-4">
-        <label class="form-label">Categoría:</label>
-        <select
-          class="form-select"
-          name="categoria"
-          [(ngModel)]="producto.categoria"
-          required
-          #categoria="ngModel">
-          <option value="">Seleccionar categoría</option>
-          <option>Cerdo</option>
-          <option>Pescado</option>
-          <option>Pollo</option>
-          <option>Res</option>
-        </select>
-        <div
-          *ngIf="categoria.invalid && (categoria.dirty || categoria.touched)"
-          class="text-danger">
-          Selecciona una categoría
-        </div>
-      </div>
-    </div>
+          </div>
 
-    <!-- Sección 5 - Proveedores -->
-    <div class="row mt-4 border-top pt-3">
-      <div class="col-12">
-        <label class="form-label">Proveedores:</label>
-        <select
-          class="form-select"
-          multiple
-          name="proveedores"
-          [(ngModel)]="producto.proveedores"
-          #proveedores="ngModel">
-          <option value="SuKarne">SuKarne</option>
-          <option value="Sigma Alimentos">Sigma Alimentos</option>
-          <option value="Grupo Bafar">Grupo Bafar</option>
-          <option value="Marindustrias">Marindustrias</option>
-          <option value="Pescanova">Pescanova</option>
-          <option value="JBS USA">JBS USA</option>
-          <option value="Cargill Meat Solutions">Cargill Meat Solutions</option>
-          <option value="Tyson Foods">Tyson Foods</option>
-        </select>
-        <small class="text-muted">
-          Mantén presionada la tecla Ctrl (o Cmd en Mac) para seleccionar más de un proveedor.
-        </small>
-      </div>
-    </div>
-
-    <!-- Sección 2 - Precios -->
-    <div class="row mt-4 border-top pt-3 g-3">
-      <div class="col-md-3">
-        <label class="form-label">Precio pieza:</label>
-        <div class="input-group">
-          <span class="input-group-text">$</span>
-          <input
-            type="number"
-            class="form-control"
-            name="precio_pieza"
-            [(ngModel)]="producto.precio_pieza"
-            #precioPieza="ngModel"
-            min="0"
-            required>
         </div>
-        <div
-          *ngIf="precioPieza.invalid && (precioPieza.dirty || precioPieza.touched)"
-          class="text-danger">
-          <small *ngIf="precioPieza.errors?.['required']">
-            Precio de pieza es obligatorio
-          </small>
-          <small *ngIf="precioPieza.errors?.['min']">
-            Precio debe ser mayor o igual a 0
-          </small>
-        </div>
-      </div>
-
-      <div class="col-md-3">
-        <label class="form-label">Precio caja:</label>
-        <div class="input-group">
-          <span class="input-group-text">$</span>
-          <input
-            type="number"
-            class="form-control"
-            name="precio_caja"
-            [(ngModel)]="producto.precio_caja"
-            #precioCaja="ngModel"
-            min="0"
-            required>
-        </div>
-        <div
-          *ngIf="precioCaja.invalid && (precioCaja.dirty || precioCaja.touched)"
-          class="text-danger">
-          <small *ngIf="precioCaja.errors?.['required']">
-            Precio de caja es obligatorio
-          </small>
-          <small *ngIf="precioCaja.errors?.['min']">
-            Precio debe ser mayor o igual a 0
-          </small>
-        </div>
-      </div>
-
-      <div class="col-md-3">
-        <label class="form-label">Cantidad caja:</label>
-        <input
-          type="number"
-          class="form-control"
-          name="cantidad_caja"
-          [(ngModel)]="producto.cantidad_caja"
-          #cantidadCaja="ngModel"
-          min="1"
-          required>
-        <div
-          *ngIf="cantidadCaja.invalid && (cantidadCaja.dirty || cantidadCaja.touched)"
-          class="text-danger">
-          <small *ngIf="cantidadCaja.errors?.['required']">
-            Cantidad de caja es obligatoria
-          </small>
-          <small *ngIf="cantidadCaja.errors?.['min']">
-            Cantidad debe ser mayor a 0
-          </small>
-        </div>
-      </div>
-
-      <div class="col-md-3">
-        <label class="form-label">Pasillo:</label>
-        <input
-          type="number"
-          class="form-control"
-          name="pasillo"
-          [(ngModel)]="producto.pasillo"
-          #posillo="ngModel"
-          min="0"
-          required>
-        <div
-          *ngIf="posillo.invalid && (posillo.dirty || posillo.touched)"
-          class="text-danger">
-          <small *ngIf="posillo.errors?.['required']">
-            Posillo es obligatorio
-          </small>
-          <small *ngIf="posillo.errors?.['min']">
-            Posillo debe ser mayor o igual a 0
-          </small>
-        </div>
-      </div>
-    </div>
-
-    <!-- Sección 3 - Existencias -->
-    <div class="row mt-4 border-top pt-3 g-3">
-      <div class="col-md-6">
-        <label class="form-label">Existencia en almacén:</label>
-        <input
-          type="number"
-          class="form-control"
-          name="existencia_almacen"
-          [(ngModel)]="producto.existencia_almacen"
-          #existenciaAlmacen="ngModel"
-          min="0"
-          required>
-        <div
-          *ngIf="existenciaAlmacen.invalid && (existenciaAlmacen.dirty || existenciaAlmacen.touched)"
-          class="text-danger">
-          <small *ngIf="existenciaAlmacen.errors?.['required']">
-            Existencia en almacén es obligatoria
-          </small>
-          <small *ngIf="existenciaAlmacen.errors?.['min']">
-            Existencia debe ser mayor o igual a 0
-          </small>
-        </div>
-      </div>
-
-      <div class="col-md-6">
-        <label class="form-label">Stock en almacén:</label>
-        <input
-          type="number"
-          class="form-control"
-          name="stock_almacen"
-          [(ngModel)]="producto.stock_almacen"
-          #stockAlmacen="ngModel"
-          min="0"
-          required>
-        <div
-          *ngIf="stockAlmacen.invalid && (stockAlmacen.dirty || stockAlmacen.touched)"
-          class="text-danger">
-          <small *ngIf="stockAlmacen.errors?.['required']">
-            Stock en almacén es obligatorio
-          </small>
-          <small *ngIf="stockAlmacen.errors?.['min']">
-            Stock debe ser mayor o igual a 0
-          </small>
-        </div>
-      </div>
-
-      <div class="col-md-6">
-        <label class="form-label">Existencia en exhibición:</label>
-        <input
-          type="number"
-          class="form-control"
-          name="existencia_exhibe"
-          [(ngModel)]="producto.existencia_exhibe"
-          #existenciaExhibicion="ngModel"
-          min="0"
-          required>
-        <div
-          *ngIf="existenciaExhibicion.invalid && (existenciaExhibicion.dirty || existenciaExhibicion.touched)"
-          class="text-danger">
-          <small *ngIf="existenciaExhibicion.errors?.['required']">
-            Existencia en exhibición es obligatoria
-          </small>
-          <small *ngIf="existenciaExhibicion.errors?.['min']">
-            Existencia debe ser mayor o igual a 0
-          </small>
-        </div>
-      </div>
-
-      <div class="col-md-6">
-        <label class="form-label">Stock en exhibición:</label>
-        <input
-          type="number"
-          class="form-control"
-          name="stock_exhibicion"
-          [(ngModel)]="producto.stock_exhibe"
-          #stockExhibicion="ngModel"
-          min="0"
-          required>
-        <div
-          *ngIf="stockExhibicion.invalid && (stockExhibicion.dirty || stockExhibicion.touched)"
-          class="text-danger">
-          <small *ngIf="stockExhibicion.errors?.['required']">
-            Stock en exhibición es obligatorio
-          </small>
-          <small *ngIf="stockExhibicion.errors?.['min']">
-            Stock debe ser mayor o igual a 0
-          </small>
-        </div>
-      </div>
-    </div>
-
-    <!-- Sección 4 - Imagen -->
-    <div class="row mt-4 border-top pt-3">
-      <div class="col-12">
-        <label class="form-label">Imagen del producto:</label>
-        <div class="input-group">
-          <input
-            type="file"
-            class="form-control"
-            name="imagen"
-            (change)="onFileSelected($event)"
-            accept="image/*">
-          <button
-            class="btn btn-outline-secondary"
-            type="button"
-            (click)="fileInput.click()">
-            Seleccionar archivo
-          </button>
-          <input
-            #fileInput
-            type="file"
-            style="display: none;"
-            (change)="onFileSelected($event)"
-            accept="image/*">
-        </div>
-        <small class="text-muted">
-          {{ imagenSeleccionada ? imagenSeleccionada.name : 'Ningún archivo seleccionado' }}
-        </small>
       </div>
     </div>
 
     <!-- Botón Guardar -->
     <div class="row mt-4">
       <div class="col-12 text-center">
-        <button
-          type="submit"
-          class="btn btn-primary btn-lg px-5"
-          [disabled]="!productoForm.form.valid || cargando">
+        <button type="submit" class="btn btn-primary btn-lg px-5 guardar" [disabled]="!productoForm.form.valid || cargando">
           {{ cargando ? 'Guardando...' : 'Guardar producto' }}
         </button>
       </div>

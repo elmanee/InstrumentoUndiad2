@@ -4,7 +4,7 @@
     <div class="row align-items-center">
       <!-- Logo y Título -->
       <div class="col-md-6 d-flex align-items-center">
-        <img src="/assets/images/logo-carniceria.png" alt="Logo Carnicería" class="header-logo me-3" />
+        <img src="../assets/logo.png" alt="Logo Carnicería" class="header-logo me-3" />
         <h1 class="text-white mb-0">Sistema de Productos</h1>
       </div>
 
@@ -34,32 +34,10 @@
     <div class="row mt-2">
       <div class="col">
         <nav class="nav">
-          <a class="nav-link text-white" href="#">Inicio</a>
-          <a class="nav-link text-white" href="#">Agregar</a>
+          <a class="nav-link text-white" routerLink="/almacenista">Inicio</a>
+          <a class="nav-link text-white" routerLink="/agregar-producto">Agregar</a>
         </nav>
       </div>
     </div>
   </div>
 </header>
-
-<!-- Estilos para el Header -->
-<style>
-.header {
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.header-logo {
-  width: 40px;
-  height: 40px;
-}
-
-.nav-link {
-  padding: 0.5rem 1rem;
-  font-weight: 500;
-}
-
-.nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-}
-</style>

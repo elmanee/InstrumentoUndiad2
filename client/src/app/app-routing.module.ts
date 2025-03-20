@@ -9,7 +9,7 @@ import { AgregarProductoComponent } from './features/almacenista/agregar-product
 const routes: Routes = [
   { path: 'almacenista', component: AlmacenistaComponent },
   { path: 'inventario', component: InventarioComponent },
-  { path: 'agregar-productoss', component: AgregarProductoComponent },
+  { path: 'agregar-producto', component: AgregarProductoComponent },
   { path: '', redirectTo: '/almacenista', pathMatch: 'full' }
 ];
 

@@ -1,5 +1,22 @@
 /* Estilos para el componente de inventario */
+.header {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
 
+.header-logo {
+  width: 40px;
+  height: 40px;
+}
+
+.nav-link {
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
 /* Estilo para la tarjeta al hacer hover */
 .card {
   transition: transform 0.3s ease, box-shadow 0.3s ease;

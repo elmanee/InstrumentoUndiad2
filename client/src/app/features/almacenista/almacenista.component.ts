@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AlmacenistaService } from '../../services/almacenista.service';
 
 @Component({
     selector: 'app-almacenista',

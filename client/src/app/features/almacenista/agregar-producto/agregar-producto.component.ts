@@ -42,6 +42,7 @@ export class AgregarProductoComponent {
 
   // Variable para manejar la imagen seleccionada
   imagenSeleccionada: File | null = null;
+  imagenPreview: string | null = null;
 
   // Variable para mostrar estado de carga
   cargando = false;
@@ -59,7 +60,14 @@ export class AgregarProductoComponent {
     const file = event.target.files[0];
     if (file) {
       this.imagenSeleccionada = file;
-    }
+
+      // Crear vista previa
+      const reader = new FileReader();
+      reader.onload = () => {
+          this.imagenPreview = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+  }
   }
 
   // Método principal para guardar el producto
