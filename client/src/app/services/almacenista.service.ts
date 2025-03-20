@@ -2,7 +2,9 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError  } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+
 
 // Interfaz actualizada para definir la estructura de un Producto
 export interface Producto {
@@ -11,6 +13,7 @@ export interface Producto {
   marca: string;
   tamanio: string;
   categoria: string;
+  estatus?: string;
   proveedores?: string[];
   precio_pieza?: number;
   precio_caja?: number;
@@ -28,7 +31,7 @@ export interface Producto {
 })
 export class AlmacenistaService {
   // URL base de la API con el prefijo /api
-  private APIURL = 'http://localhost:3000/api';
+  private APIURL = 'http://localhost:3000/api'; // Ensure this matches your backend URL
 
   constructor(private http: HttpClient) { }
 
@@ -98,7 +101,12 @@ export class AlmacenistaService {
   }
 
   // Método para cambiar el estatus de un producto
-  cambiarEstatus(codigo_barras: string, estatus: boolean): Observable<any> {
-    return this.http.patch(`${this.APIURL}/actualizar_estatus/${codigo_barras}`, { estatus });
-  }
+  // AlmacenistaService
+
+  // In almacenista.service.ts
+cambiarEstatus(codigoBarras: string, nuevoEstatus: boolean): Observable<any> {
+  // Ensure this URL matches exactly what your API expects
+  const url = `${this.APIURL}/actualizar_estatus/${codigoBarras}`;
+  return this.http.patch(url, { estatus: nuevoEstatus });
+}
 }
