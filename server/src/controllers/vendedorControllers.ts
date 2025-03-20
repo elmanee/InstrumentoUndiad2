@@ -2,6 +2,14 @@ import { Request, Response } from "express";
 import Producto from '../models/productoModel';
 import HistorialExhibe from "../models/historialExhibe";
 
+export const obtenerProductos  = async (req: Request, res:Response):Promise<void> => {
+  try {
+    const productos = await Producto.find();
+    res.status(200).json(productos)
+  } catch (error: any) {
+    res.status(500).json({ message: error.message})
+  }
+}
 
 /obtiene producto por nombre- vendedor/
 export const obtenerProductosNombre = async (req: Request, res: Response): Promise<void> => {

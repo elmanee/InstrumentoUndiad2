@@ -9,3 +9,8 @@ export const environment = {
     appId: "1:803371840601:web:4e65ce3da74f4884bcad48"
   }
 };
+
+export const environmentDos = {
+  production: false,
+  apiUrl: 'http://localhost:3000'
+};

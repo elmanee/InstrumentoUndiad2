@@ -1,0 +1,127 @@
+<!-- product-card.component.html -->
+<div class="container mt-4">
+  <h2 class="mb-4">Catálogo de Productos</h2>
+
+  <!-- Búsqueda y Filtros -->
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Buscar producto..." [(ngModel)]="searchTerm">
+        <button class="btn btn-outline-primary" type="button">
+          <i class="bi bi-search"></i> Buscar
+        </button>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="d-flex justify-content-end">
+        <select class="form-select me-2" style="max-width: 200px;" [(ngModel)]="filtroEstatus">
+          <option value="todos">Todos los productos</option>
+          <option value="activo">Solo activos</option>
+          <option value="inactivo">Solo inactivos</option>
+        </select>
+        <button class="btn btn-primary">
+          <i class="bi bi-filter"></i> Filtrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Productos en cards -->
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="col" *ngFor="let producto of productosFiltrados">
+      <div class="card h-100" [ngClass]="{'border-success': producto.estatus === 'activo', 'border-danger': producto.estatus === 'inactivo'}">
+        <div class="card-header d-flex justify-content-between align-items-center"
+             [ngClass]="{'bg-success text-white': producto.estatus === 'activo', 'bg-danger text-white': producto.estatus === 'inactivo'}">
+          <h5 class="card-title mb-0">{{producto.nombre_producto}}</h5>
+          <span class="badge" [ngClass]="{'bg-light text-success': producto.estatus === 'activo', 'bg-light text-danger': producto.estatus === 'inactivo'}">
+            {{producto.estatus === 'activo' ? 'Activo' : 'Inactivo'}}
+          </span>
+        </div>
+
+        <!-- Imagen del producto -->
+        <div class="card-img-container">
+          <img
+            [src]="producto.imagen ? 'http://localhost:3000' + getImageUrl(producto.imagen) : 'assets/images/producto-default.jpg'"
+            class="card-img-top product-image"
+            [alt]="producto.nombre_producto"
+            (error)="onImageError($event)">
+          <div class="status-indicator" [ngClass]="{'active': producto.estatus === 'activo', 'inactive': producto.estatus === 'inactivo'}"></div>
+        </div>
+
+        <div class="card-body">
+          <p class="card-text"><strong>Código:</strong> {{producto.codigo_barras}}</p>
+          <p class="card-text"><strong>Estatus:</strong> {{producto.estatus}}</p>
+          <div class="row mb-2">
+            <div class="col-6">
+              <p class="card-text"><strong>Stock Exhibe:</strong> {{producto.stock_exhibe}}</p>
+            </div>
+            <div class="col-6">
+              <p class="card-text"><strong>En exhibición:</strong> {{producto.existencia_exhibe}}</p>
+            </div>
+          </div>
+          <div class="d-grid gap-2">
+            <button class="btn btn-primary" [disabled]="producto.estatus !== 'activo'" (click)="abrirModalEdicion(producto)">
+              <i class="bi bi-pencil-square"></i> Editar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Paginación -->
+
+</div>
+
+<!-- Modal de edición -->
+<div class="modal fade" id="editarProductoModal" tabindex="-1" aria-labelledby="editarProductoModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="editarProductoModalLabel">Actualizar Producto</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form *ngIf="productoSeleccionado">
+          <!-- Read-only fields -->
+          <div class="mb-3">
+            <label for="nombreProducto" class="form-label">Nombre producto</label>
+            <input type="text" class="form-control" id="nombreProducto" [(ngModel)]="productoSeleccionado.nombre_producto" name="nombre_producto" readonly>
+          </div>
+
+          <!-- Editable fields -->
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="existenciaAlmacen" class="form-label">Existencia en almacén</label>
+                <input type="number" class="form-control" id="existenciaAlmacen"
+                       [(ngModel)]="productoSeleccionado.existencia_almacen"
+                       name="existencia_almacen">
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="stockExhibe" class="form-label">Stock exhibición</label>
+                <input type="number" class="form-control" id="stockExhibe" [(ngModel)]="productoSeleccionado.stock_exhibe" name="stock_exhibe">
+              </div>
+            </div>
+          </div>
+
+          <!-- New field: Cantidad a rellenar -->
+          <div class="row">
+            <div class="col-md-6">
+              <div class="mb-3">
+                <label for="cantidadRellenar" class="form-label">Cantidad a rellenar</label>
+                <input type="number" class="form-control" id="cantidadRellenar" [(ngModel)]="productoSeleccionado.cantidad_rellenar" name="cantidad_rellenar">
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" (click)="actualizarProducto()">Actualizar</button>
+      </div>
+    </div>
+  </div>
+</div>

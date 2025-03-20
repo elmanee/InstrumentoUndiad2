@@ -19,7 +19,7 @@ class Server {
     this.app.set('port', process.env.PORT || 3000);
     this.app.use(cors({
       origin: 'http://localhost:4200', // Solo permite solicitudes desde Angular
-      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATH'],
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
       allowedHeaders: ['Content-Type', 'Authorization']
   }));
     this.app.use(express.json()); 
