@@ -28,7 +28,7 @@ export class AgregarProductoComponent {
     marca: '',
     tamanio: '',
     categoria: '',
-    proveedores: [],
+    nombre_proveedor: [],
     precio_pieza: undefined,
     precio_caja: undefined,
     cantidad_caja: undefined,
@@ -53,7 +53,11 @@ export class AgregarProductoComponent {
     private almacenistaService: AlmacenistaService,
     private imageUploadService: ImageUploadService,
     private router: Router
-  ) {}
+
+
+  ) {
+
+  }
 
   // Método para manejar la selección de archivos
   onFileSelected(event: any): void {
@@ -143,10 +147,19 @@ export class AgregarProductoComponent {
 
   // Método para crear el producto en el servidor
   private crearProductoEnServidor(): void {
+    // Verificar si hay proveedores seleccionados
+    console.log('Proveedores seleccionados antes de enviar:', this.producto.nombre_proveedor);
+
+    // Si no hay proveedores o es null/undefined, asegúrate de enviar un array vacío
+    const proveedoresFiltrados = this.producto.nombre_proveedor
+    ? this.producto.nombre_proveedor.filter(p => p !== null && p !== undefined)
+    : [];
+
     // Creamos una copia del objeto y convertimos valores a número
-    // Crear copia del objeto con nombres de campos actualizados
     const productoEnvio = {
         ...this.producto,
+        // Asegúrate de que proveedores sea incluido en el objeto enviado
+        nombre_proveedor: proveedoresFiltrados, // Crear copia del array
         precio_pieza: this.producto.precio_pieza ? Number(this.producto.precio_pieza) : undefined,
         precio_caja: this.producto.precio_caja ? Number(this.producto.precio_caja) : undefined,
         cantidad_caja: this.producto.cantidad_caja ? Number(this.producto.cantidad_caja) : undefined,
@@ -174,5 +187,34 @@ export class AgregarProductoComponent {
             alert(this.mensajeError);
         }
     });
+}
+
+// Método para manejar los checkboxes de proveedores
+toggleProveedor(proveedor: string, event: any): void {
+  // Inicializar el array si no existe
+  if (!this.producto.nombre_proveedor) {
+    this.producto.nombre_proveedor = [];
   }
+
+  if (event.target.checked) {
+    if (!this.producto.nombre_proveedor.includes(proveedor)) {
+      this.producto.nombre_proveedor.push(proveedor);
+    }
+  } else {
+    this.producto.nombre_proveedor = this.producto.nombre_proveedor.filter(p => p !== proveedor);
+  }
+
+  console.log('Proveedores actuales:', this.producto.nombre_proveedor);
+}
+
+  listaProveedores: string[] = [
+    'SuKarne',
+    'Sigma Alimentos',
+    'Grupo Bafar',
+    'Marindustrias',
+    'Pescanova',
+    'JBS USA',
+    'Cargill Meat Solutions',
+    'Tyson Foods'
+  ];
 }

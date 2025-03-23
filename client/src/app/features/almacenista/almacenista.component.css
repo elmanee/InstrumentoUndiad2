@@ -201,3 +201,21 @@
     font-size: 1.25rem;
   }
 }
+
+/* Add these styles to your component's CSS file */
+.card-img-container {
+  position: relative;
+  height: 200px; /* Fixed height for consistent card appearance */
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.product-image {
+  max-height: 180px; /* Maximum height within container */
+  max-width: 100%;
+  object-fit: contain; /* Maintains aspect ratio without cropping */
+}

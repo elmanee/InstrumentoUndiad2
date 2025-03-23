@@ -8,7 +8,7 @@
       </div>
 
       <!-- Barra de búsqueda y filtros -->
-      
+
     </div>
 
     <!-- Menú de navegación -->
@@ -96,27 +96,24 @@
           </div>
         </div>
 
-        <!-- Sección 5 - Proveedores -->
-        <div class="row mt-4 border-top pt-3">
-          <div class="col-12">
-            <label class="form-label">Proveedores:</label>
-            <select class="form-select" multiple name="proveedores" [(ngModel)]="producto.proveedores"
-              #proveedores="ngModel">
-              <option value="SuKarne">SuKarne</option>
-              <option value="Sigma Alimentos">Sigma Alimentos</option>
-              <option value="Grupo Bafar">Grupo Bafar</option>
-              <option value="Marindustrias">Marindustrias</option>
-              <option value="Pescanova">Pescanova</option>
-              <option value="JBS USA">JBS USA</option>
-              <option value="Cargill Meat Solutions">Cargill Meat Solutions</option>
-              <option value="Tyson Foods">Tyson Foods</option>
-            </select>
-            <small class="text-muted">
-              Mantén presionada la tecla Ctrl (o Cmd en Mac) para seleccionar más de un proveedor.
-            </small>
-          </div>
-        </div>
+          <label class="form-label">Proveedores:</label>
+          <select class="form-select" multiple [(ngModel)]="producto.nombre_proveedor" name="nombre_proveedor">
+            <option *ngFor="let proveedor of listaProveedores" [value]="proveedor">
+              {{proveedor}}
+            </option>
+          </select>
 
+          <!-- O si usas checkboxes
+          <div class="form-check" *ngFor="let proveedor of listaProveedores">
+            <input class="form-check-input" type="checkbox"
+                  [id]="'proveedor_' + proveedor"
+                  [value]="proveedor"
+                  (change)="toggleProveedor(proveedor, $event)">
+            <label class="form-check-label" [for]="'proveedor_' + proveedor">
+              {{proveedor}}
+            </label>
+          </div>
+ -->
         <!-- Sección 2 - Precios -->
         <div class="row mt-4 border-top pt-3 g-3">
           <div class="col-md-3">

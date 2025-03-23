@@ -355,7 +355,15 @@ export const actualizarExistencias = async (req: Request, res:Response):Promise<
       return;
     }
 
-    var numLote = 101;
+    // Buscar el último lote para obtener el último número
+    const ultimoLote = await LoteCompra.findOne().sort({ numero_lote: -1 }).limit(1);
+
+    var numLote = 4555;
+
+    if (ultimoLote && ultimoLote.numero_lote) {
+      numLote = ultimoLote.numero_lote + 1;
+    }
+    
 
     const rellenoAlmacen = new LoteCompra({
       codigo_barras: producto.codigo_barras,
@@ -366,7 +374,7 @@ export const actualizarExistencias = async (req: Request, res:Response):Promise<
       fecha_caducidad: fecha_caducidad
     })
 
-    producto.existencia_almacen = valAlmacen;
+    producto.existencia_almacen += valAlmacen;
 
     await Promise.all([
       producto.save(),
@@ -378,7 +386,6 @@ export const actualizarExistencias = async (req: Request, res:Response):Promise<
       producto_actualizado: producto
     })
 
-    numLote++;
   } catch (error:any) {
     res.status(500).json({
       message: error.message

@@ -14,7 +14,7 @@ export interface Producto {
   tamanio: string;
   categoria: string;
   estatus?: string;
-  proveedores?: string[];
+  nombre_proveedor: string[],
   precio_pieza?: number;
   precio_caja?: number;
   cantidad_caja?: number;
@@ -81,9 +81,7 @@ export class AlmacenistaService {
   }
 
   // Método para actualizar un producto
-  actualizarProducto(codigo_barras: string, producto: Partial<Producto>): Observable<any> {
-    return this.http.patch(`${this.APIURL}/actualizar_producto/${codigo_barras}`, producto);
-  }
+
 
   // Método para eliminar un producto
   eliminarProducto(codigo_barras: string): Observable<any> {
@@ -91,22 +89,22 @@ export class AlmacenistaService {
   }
 
   // Método para actualizar existencias
-  actualizarExistencias(codigo_barras: string, existencias: {
-    existencia_almacen?: number,
-    stock_almacen?: number,
-    existencia_exhibicion?: number,
-    stock_exhibicion?: number
-  }): Observable<any> {
-    return this.http.patch(`${this.APIURL}/actualizar_existencia/${codigo_barras}`, existencias);
+  actualizarExistencias(codigoBarras: string, relleno: number, fechaCaducidad: Date): Observable<any> {
+    console.log('Enviando actualización de existencias:', { valAlmacen: relleno, fecha_caducidad: fechaCaducidad });
+
+    return this.http.patch(`${this.APIURL}/actualizar_existencia/${codigoBarras}`, {
+      valAlmacen: relleno,
+      fecha_caducidad: fechaCaducidad
+    });
   }
 
-  // Método para cambiar el estatus de un producto
-  // AlmacenistaService
+  cambiarEstatus(codigoBarras: string, nuevoEstatus: string): Observable<any> {
+    // Ensure this URL matches exactly what your API expects
+    const url = `${this.APIURL}/actualizar_estatus/${codigoBarras}`;
+    return this.http.patch(url, { status: nuevoEstatus });
+}
 
-  // In almacenista.service.ts
-cambiarEstatus(codigoBarras: string, nuevoEstatus: boolean): Observable<any> {
-  // Ensure this URL matches exactly what your API expects
-  const url = `${this.APIURL}/actualizar_estatus/${codigoBarras}`;
-  return this.http.patch(url, { estatus: nuevoEstatus });
+actualizarProducto(codigoBarras: string, datos: any): Observable<any> {
+  return this.http.patch(`${this.APIURL}/actualizar_producto/${codigoBarras}`, datos);
 }
 }

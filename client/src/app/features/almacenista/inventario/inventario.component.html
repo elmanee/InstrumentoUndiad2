@@ -99,15 +99,25 @@
         <!-- Información básica -->
         <div class="card-body">
           <!-- Código de barras -->
-          <p class="card-text small text-muted mb-1">ID: {{ producto.codigo_barras }}</p>
+          <p class="card-text small text-muted mb-1">Código: {{ producto.codigo_barras }}</p>
 
           <!-- Nombre del producto -->
           <h5 class="card-title text-truncate">{{ producto.nombre_producto }}</h5>
 
-          <!-- Estado del producto -->
+          <p class="card-text"> <strong>Precio:</strong> {{producto.precio_pieza }}</p>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <p class="card-text"><strong>Stock Almacen:</strong> {{producto.stock_almacen}}</p>
+            </div>
+            <div class="col-6">
+              <p class="card-text"><strong>Almacen:</strong> {{producto.existencia_almacen}}</p>
+            </div>
+          </div>
+
           <div class="mt-2">
-            <span class="badge" [ngClass]="getClaseEstado(producto)">
-              {{ getEstadoProducto(producto) }}
+            <span class="badge" [ngClass]="producto.estatus === 'activo' ? 'bg-success' : 'bg-danger'">
+              {{ producto.estatus }}
             </span>
           </div>
         </div>
@@ -115,10 +125,10 @@
         <!-- Acciones -->
         <div class="card-footer bg-white border-top-0">
           <div class="d-flex justify-content-between">
-            <button class="btn btn-sm btn-outline-primary" [routerLink]="['/editar-producto', producto.codigo_barras]">
+            <button class="btn btn-sm btn-outline-primary" (click)="abrirModalEdicion(producto, modalEdicion)">
               <i class="fas fa-edit"></i> Editar
             </button>
-            <button class="btn btn-sm btn-outline-danger" (click)="eliminarProducto(producto.codigo_barras)">
+            <button class="btn btn-sm btn-outline-danger" (click)="abrirModalEliminar(producto, modalProducto)">
               <i class="fas fa-trash"></i> Eliminar
             </button>
           </div>
@@ -127,3 +137,256 @@
     </div>
   </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- modal eliminar - cambiar estatus producto-->
+<ng-template #modalProducto let-modal>
+  <div class="modal-header bg-primary text-white">
+    <h5 class="modal-title">Gestionar Producto</h5>
+    <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+
+  <div class="modal-body">
+    <!-- Pestañas simplificadas sin ngbNav -->
+    <ul class="nav nav-tabs mb-3">
+      <li class="nav-item">
+        <a class="nav-link" [class.active]="activeTab === 'eliminar'" (click)="cambiarTab('eliminar')">
+          <i class="fas fa-trash me-2"></i>Eliminar
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [class.active]="activeTab === 'estatus'" (click)="cambiarTab('estatus')">
+          <i class="fas fa-toggle-on me-2"></i>Cambiar Estatus
+        </a>
+      </li>
+    </ul>
+
+    <!-- Contenido de las pestañas -->
+    <div [hidden]="activeTab !== 'eliminar'">
+      <div class="alert alert-danger">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        <strong>¡Atención!</strong> Esta acción eliminará permanentemente el producto.
+      </div>
+
+      <div class="mb-3">
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="confirmarEliminacion" [(ngModel)]="confirmacionEliminar">
+          <label class="form-check-label" for="confirmarEliminacion">
+            Confirmo que deseo eliminar el producto: <strong>{{ productoSeleccionado?.nombre_producto }}</strong>
+          </label>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-secondary me-2" (click)="modal.dismiss()">Cancelar</button>
+        <button type="button" class="btn btn-danger"
+                [disabled]="!confirmacionEliminar"
+                (click)="confirmarEliminar()">
+          <i class="fas fa-trash me-2"></i>Eliminar Producto
+        </button>
+      </div>
+    </div>
+
+    <div [hidden]="activeTab !== 'estatus'">
+      <p class="mb-3">Seleccione el nuevo estatus para el producto: <strong>{{ productoSeleccionado?.nombre_producto }}</strong></p>
+
+      <div class="mb-3">
+        <div class="d-flex justify-content-center">
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="estatusRadio" id="estatusActivo"
+                   value="activo" [(ngModel)]="status">
+            <label class="form-check-label text-success" for="estatusActivo">
+              <i class="fas fa-check-circle me-1"></i>Activo
+            </label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="estatusRadio" id="estatusInactivo"
+                   value="inactivo" [(ngModel)]="status">
+            <label class="form-check-label text-danger" for="estatusInactivo">
+              <i class="fas fa-times-circle me-1"></i>Inactivo
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-info" *ngIf="productoSeleccionado?.estatus === status">
+        <i class="fas fa-info-circle me-2"></i>
+        El producto ya tiene este estatus actualmente.
+      </div>
+
+      <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-secondary me-2" (click)="modal.dismiss()">Cancelar</button>
+        <button type="button" class="btn btn-primary"
+                [disabled]="!status || productoSeleccionado?.estatus === status"
+                (click)="confirmarCambioEstatus()">
+          <i class="fas fa-save me-2"></i>Guardar Cambios
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- modal editar - cambiar precio y rellenar almacen producto-->
+<ng-template #modalEdicion let-modal>
+  <div class="modal-header bg-primary text-white">
+    <h5 class="modal-title">Editar Producto</h5>
+    <button type="button" class="btn-close btn-close-white" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+
+  <div class="modal-body">
+    <!-- Pestañas -->
+    <ul class="nav nav-tabs mb-3">
+      <li class="nav-item">
+        <a class="nav-link" [class.active]="activeTabEdicion === 'precio'" (click)="cambiarTabEdicion('precio')">
+          <i class="fas fa-tag me-2"></i>Actualizar Precio
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [class.active]="activeTabEdicion === 'almacen'" (click)="cambiarTabEdicion('almacen')">
+          <i class="fas fa-warehouse me-2"></i>Gestión de Almacén
+        </a>
+      </li>
+    </ul>
+
+    <!-- Contenido pestaña Precio -->
+    <div [hidden]="activeTabEdicion !== 'precio'">
+      <div class="mb-4 text-center">
+        <h4 class="fs-5">{{productoSeleccionado?.nombre_producto}}</h4>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label class="form-label">Precio Actual:</label>
+            <div class="input-group">
+              <span class="input-group-text">$</span>
+              <input type="text" class="form-control" [value]="productoSeleccionado?.precio_pieza" readonly>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label for="nuevoPrecio" class="form-label">Nuevo Precio:</label>
+            <div class="input-group">
+              <span class="input-group-text">$</span>
+              <input
+                type="number"
+                class="form-control"
+                id="nuevoPrecio"
+                [(ngModel)]="nuevoPrecio"
+                min="0.01"
+                step="0.01"
+                placeholder="Ingrese el nuevo precio">
+            </div>
+            <small class="form-text text-muted">Ingrese el nuevo precio para este producto</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert alert-info" *ngIf="nuevoPrecio && nuevoPrecio == productoSeleccionado?.precio_pieza">
+        <i class="fas fa-info-circle me-2"></i>
+        El precio ingresado es igual al precio actual.
+      </div>
+
+      <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-secondary me-2" (click)="modal.dismiss()">Cancelar</button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          [disabled]="!nuevoPrecio || nuevoPrecio <= 0 || nuevoPrecio == productoSeleccionado?.precio_pieza"
+          (click)="actualizarPrecio()">
+          <i class="fas fa-save me-2"></i>Guardar Cambios
+        </button>
+      </div>
+    </div>
+
+    <!-- Contenido pestaña Almacén -->
+    <div [hidden]="activeTabEdicion !== 'almacen'">
+      <div class="mb-4 text-center">
+        <h4 class="fs-5">{{productoSeleccionado?.nombre_producto}}</h4>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label class="form-label">Stock Almacén:</label>
+            <input
+              type="number"
+              class="form-control"
+              [value]="productoSeleccionado?.stock_almacen"
+              readonly>
+            <small class="form-text text-muted">Stock objetivo del almacén</small>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label class="form-label">Existencia Actual:</label>
+            <input
+              type="number"
+              class="form-control"
+              [value]="productoSeleccionado?.existencia_almacen"
+              readonly>
+            <small class="form-text text-muted">Unidades actualmente en almacén</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label for="nuevoRelleno" class="form-label">Cantidad a Rellenar:</label>
+            <input
+              type="number"
+              class="form-control"
+              id="nuevoRelleno"
+              [(ngModel)]="nuevoRelleno"
+              min="1"
+              step="1"
+              placeholder="Ingrese la cantidad">
+            <small class="form-text text-muted">Unidades a añadir al almacén</small>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label for="fechaCaducidad" class="form-label">Fecha de Caducidad:</label>
+            <input
+              type="date"
+              class="form-control"
+              id="fechaCaducidad"
+              name="fechaCaducidad"
+              [(ngModel)]="fechaCaducidadStr"
+              [min]="minFechaCaducidadStr">
+            <small class="form-text text-muted">Seleccione la fecha de caducidad del lote</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-secondary me-2" (click)="modal.dismiss()">Cancelar</button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          [disabled]="!nuevoRelleno || nuevoRelleno <= 0 || !fechaCaducidadStr"
+          (click)="actualizarExistencias()">
+          <i class="fas fa-save me-2"></i>Guardar Cambios
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>

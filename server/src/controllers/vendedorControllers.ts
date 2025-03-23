@@ -143,7 +143,7 @@ export const obtenerProductosPrecio = async (req: Request, res: Response): Promi
   }
 };
 
-/Actualiza existencia-exhibe/
+/exhibe/
 export const actualizarExhibe = async (req: Request, res: Response): Promise<void> => {
   const { codigo_barras } = req.params;
   const { cantidadIn } = req.body;
@@ -160,16 +160,22 @@ export const actualizarExhibe = async (req: Request, res: Response): Promise<voi
     
     var cantAlamcen = producto.existencia_almacen;
     var cantAct = cantAlamcen - cantidadIn;
+    
+    // Update exhibition inventory
+    producto.existencia_exhibe = producto.existencia_exhibe + cantidadIn;
+    
+    // Update warehouse inventory
+    producto.existencia_almacen = cantAct;
 
+    // Create history record
     const agregacionExhibe = new HistorialExhibe({
       codigo_barras: producto.codigo_barras,
       nombre_producto: producto.nombre_producto,
       cantidad: cantidadIn,
       fecha_relleno: new Date()
-    })
+    });
 
-    producto.existencia_almacen = cantAct;
-
+    // Save both changes
     await Promise.all([
       producto.save(),
       agregacionExhibe.save()
@@ -178,12 +184,11 @@ export const actualizarExhibe = async (req: Request, res: Response): Promise<voi
     res.status(200).json({
       message: 'Exhibe fue actualizado',
       producto_actualizado: producto
-    })
-
-
+    });
   } catch (error:any) {
     res.status(500).json({
       message: error.message
-    })
+    });
   }
-}
+};
+

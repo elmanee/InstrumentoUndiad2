@@ -21,11 +21,12 @@ import { ImageUploadService } from './services/image-upload.service';
 
 import { AppComponent } from './app.component';
 import { ProductosComponent } from './productos/productos.component';
-import { GestionProductoModalComponent } from './gestion-producto-modal/gestion-producto-modal.component';
 import { CommonModule } from '@angular/common';
 import { VendedorPasilloComponent } from './vendedor-pasillo/vendedor-pasillo.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NotificacionesComponent } from './notificaciones.component';
+import { NgbModule  } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 
@@ -47,7 +48,10 @@ import { NotificacionesComponent } from './notificaciones.component';
     HttpClientModule,
     ProductosComponent,
     CommonModule,
-    NotificacionesComponent
+    NotificacionesComponent,
+    NgbModule,
+    NgbDatepickerModule
+
     // Si necesitas usar InventarioComponent en rutas, déjalo configurado en AppRoutingModule
   ],
   providers: [

@@ -53,3 +53,399 @@
   font-size: 0.75rem;
   padding: 0.25rem 0.5rem;
 }
+
+
+/* Estilos para el modal de productos */
+
+/* Estilos para el encabezado del modal */
+.modal-header.bg-primary {
+  background: linear-gradient(135deg, #3498db, #2980b9) !important;
+}
+
+/* Estilos para las pestañas */
+.nav-tabs {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.nav-tabs .nav-link {
+  color: #6c757d;
+  border: none;
+  padding: 0.75rem 1rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+}
+
+.nav-tabs .nav-link:hover {
+  color: #3498db;
+  border-bottom: 2px solid #3498db;
+  background-color: rgba(52, 152, 219, 0.05);
+}
+
+.nav-tabs .nav-link.active {
+  color: #3498db;
+  border-bottom: 2px solid #3498db;
+  background-color: rgba(52, 152, 219, 0.1);
+}
+
+/* Estilos para el contenido de las pestañas */
+.tab-content {
+  padding: 1rem 0.5rem;
+}
+
+/* Estilos para los alertas */
+.alert {
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border: none;
+}
+
+.alert-danger {
+  background-color: rgba(231, 76, 60, 0.1);
+  color: #c0392b;
+  border-left: 4px solid #e74c3c;
+}
+
+.alert-info {
+  background-color: rgba(52, 152, 219, 0.1);
+  color: #2980b9;
+  border-left: 4px solid #3498db;
+}
+
+/* Estilo para el checkbox de confirmación */
+.form-check-input {
+  cursor: pointer;
+}
+
+.form-check-input:checked {
+  background-color: #e74c3c;
+  border-color: #e74c3c;
+}
+
+/* Estilos para los radio buttons */
+.form-check-inline {
+  margin-right: 2rem;
+}
+
+.form-check-input[type="radio"]:checked {
+  background-color: #3498db;
+  border-color: #3498db;
+}
+
+/* Estilo para el botón deshabilitado */
+.btn-danger:disabled,
+.btn-primary:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* Animación suave para el cambio de tabs */
+.tab-pane.fade {
+  transition: opacity 0.15s linear;
+}
+
+/* Animación de zoom para el modal */
+.modal.fade .modal-dialog {
+  transition: transform 0.3s ease-out;
+  transform: scale(0.95);
+}
+
+.modal.show .modal-dialog {
+  transform: scale(1);
+}
+
+/* Sombra para el modal */
+.modal-content {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Estilos para los botones del modal */
+.modal-footer .btn {
+  padding: 0.5rem 1.25rem;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.modal-footer .btn-secondary {
+  background-color: #f8f9fa;
+  color: #6c757d;
+  border: 1px solid #dee2e6;
+}
+
+.modal-footer .btn-secondary:hover {
+  background-color: #e9ecef;
+  color: #495057;
+}
+
+.modal-footer .btn-danger {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  border: none;
+}
+
+.modal-footer .btn-danger:hover:not(:disabled) {
+  background: linear-gradient(135deg, #c0392b, #a93226);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.modal-footer .btn-primary {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  border: none;
+}
+
+.modal-footer .btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2980b9, #1a5276);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+
+/* Estilos para el modal de edición de productos */
+
+/* Encabezado del modal */
+.modal-header.bg-primary {
+  background: linear-gradient(135deg, #3498db, #2980b9) !important;
+}
+
+/* Estilos para las pestañas */
+.nav-tabs {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.nav-tabs .nav-link {
+  color: #6c757d;
+  border: none;
+  padding: 0.75rem 1rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+}
+
+.nav-tabs .nav-link:hover {
+  color: #3498db;
+  border-bottom: 2px solid #3498db;
+  background-color: rgba(52, 152, 219, 0.05);
+}
+
+.nav-tabs .nav-link.active {
+  color: #3498db;
+  border-bottom: 2px solid #3498db;
+  background-color: rgba(52, 152, 219, 0.1);
+}
+
+/* Estilos para el contenido del modal */
+.modal-body {
+  padding: 1.5rem;
+}
+
+/* Estilos para el header del producto */
+.modal-body h4 {
+  color: #2c3e50;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.badge.bg-secondary {
+  background-color: #7f8c8d !important;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+}
+
+/* Estilos para los campos del formulario */
+.form-label {
+  font-weight: 500;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.form-control {
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  transition: all 0.2s ease;
+}
+
+.form-control:focus {
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.15);
+  outline: none;
+}
+
+.form-control:read-only {
+  background-color: #f8f9fa;
+}
+
+.form-text {
+  color: #7f8c8d;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+
+/* Estilos para input-group */
+.input-group-text {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  color: #495057;
+}
+
+/* Estilos para alertas */
+.alert {
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border: none;
+}
+
+.alert-info {
+  background-color: rgba(52, 152, 219, 0.1);
+  color: #2980b9;
+  border-left: 4px solid #3498db;
+}
+
+/* Estilos para los botones */
+.btn {
+  border-radius: 6px;
+  padding: 0.5rem 1.25rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  border: none;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2980b9, #1a5276);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary:disabled {
+  background: #bdc3c7;
+  transform: none;
+  box-shadow: none;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.btn-secondary {
+  background-color: #f8f9fa;
+  color: #6c757d;
+  border: 1px solid #dee2e6;
+}
+
+.btn-secondary:hover {
+  background-color: #e9ecef;
+  color: #495057;
+}
+
+/* Animaciones para el modal */
+.modal.fade .modal-dialog {
+  transition: transform 0.3s ease-out;
+  transform: scale(0.95);
+}
+
+.modal.show .modal-dialog {
+  transform: scale(1);
+}
+
+/* Sombra para el modal */
+.modal-content {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Estilos para el selector de calendario */
+.calendar-button {
+  background-color: #f8f9fa;
+  border-color: #dee2e6;
+}
+
+.calendar-button:hover {
+  background-color: #e9ecef;
+}
+
+.calendar-button:active {
+  background-color: #dae0e5 !important;
+}
+
+/* Estilos para el datepicker */
+.ngb-dp-month {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.ngb-dp-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+  padding: 0.5rem;
+}
+
+.ngb-dp-weekday {
+  font-style: normal;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.ngb-dp-day {
+  width: 2.5rem;
+  height: 2.5rem;
+  line-height: 2.5rem;
+}
+
+.ngb-dp-day > div {
+  width: 2.5rem;
+  height: 2.5rem;
+  line-height: 2.5rem;
+  border-radius: 50%;
+}
+
+/* Día seleccionado */
+.ngb-dp-day.bg-primary > div {
+  background-color: #3498db !important;
+}
+
+/* Día actual */
+.ngb-dp-today > div {
+  border: 1px solid #3498db;
+}
+
+/* Días fuera del mes */
+.ngb-dp-day[tabindex="-1"] > div {
+  color: #bdc3c7;
+}
+
+/* Días deshabilitados */
+.ngb-dp-day.disabled > div {
+  color: #dee2e6;
+}
+
+/* Input de fecha cuando se enfoca */
+input.form-control:focus {
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.15);
+}
+
+/* Mejora de accesibilidad para input readonly */
+input.form-control[readonly]:not([disabled]) {
+  background-color: #fff;
+  cursor: pointer;
+}
+
+/* Hover sobre días del calendario */
+.ngb-dp-day:not(.disabled):not(.bg-primary):hover > div {
+  background-color: rgba(52, 152, 219, 0.1);
+}
