@@ -23,6 +23,8 @@ import { NgbModalModule, NgbDatepickerModule} from '@ng-bootstrap/ng-bootstrap';
 export class InventarioComponent implements OnInit {
   // Lista de productos
   productos: Producto[] = [];
+  productosOriginales: Producto[] = [];
+
 
   // Estado de carga
   cargando: boolean = true;
@@ -44,6 +46,32 @@ export class InventarioComponent implements OnInit {
 
   fechaCaducidadStr: string = '';
   minFechaCaducidadStr: string = '';
+
+  // Variables para filtros
+  filtros = {
+    textoBusqueda: '',
+    codigoBarras: '',
+    nombreProducto: '',
+    marca: '',
+    pasillo: '',
+    tamano: ''
+  };
+
+  // Listas para los selectores de filtros
+  marcasDisponibles: string[] = [];
+  tamanosDisponibles: string[] = [];
+
+  // Variable para filtros rápidos
+  filtroRapido: string = '';
+
+  // Contadores para los pills
+  totalProductos: number = 0;
+  productosActivos: number = 0;
+  productosInactivos: number = 0;
+  productosBajoStock: number = 0;
+
+  // Control de vista
+  vistaActual: string = 'grid'; // 'grid' o 'list'
 
   constructor(
     private almacenistaService: AlmacenistaService,
@@ -71,8 +99,11 @@ export class InventarioComponent implements OnInit {
     this.almacenistaService.obtenerProductos().subscribe({
       next: (data) => {
         this.productos = data;
+        this.productosOriginales = [...data];
+        this.extraerOpcionesFiltros(data);
+        this.actualizarContadoresFiltros(data);
         this.cargando = false;
-        console.log(data)
+        console.log(data);
       },
       error: (err) => {
         console.error('Error al cargar productos:', err);
@@ -262,4 +293,124 @@ confirmarCambioEstatus(): void {
     });
   }
 
+  extraerOpcionesFiltros(productos: Producto[]): void {
+    this.marcasDisponibles = [...new Set(productos
+      .filter(p => p.marca)
+      .map(p => p.marca))]
+      .sort();
+
+    // Extraer tamaños únicos
+    this.tamanosDisponibles = [...new Set(productos
+      .filter(p => p.tamanio)
+      .map(p => p.tamanio))]
+      .sort();
+  }
+
+  aplicarFiltros(): void {
+    let productosFiltrados = [...this.productosOriginales];
+
+    // Filtro por texto general (busca en código, nombre y marca)
+    if (this.filtros.textoBusqueda.trim()) {
+      const texto = this.filtros.textoBusqueda.toLowerCase().trim();
+      productosFiltrados = productosFiltrados.filter(p =>
+        (p.codigo_barras && p.codigo_barras.toLowerCase().includes(texto)) ||
+        (p.nombre_producto && p.nombre_producto.toLowerCase().includes(texto)) ||
+        (p.marca && p.marca.toLowerCase().includes(texto))
+      );
+    }
+
+    // Filtros específicos
+    if (this.filtros.codigoBarras.trim()) {
+      productosFiltrados = productosFiltrados.filter(p =>
+        p.codigo_barras && p.codigo_barras.toLowerCase().includes(this.filtros.codigoBarras.toLowerCase().trim())
+      );
+    }
+
+    if (this.filtros.nombreProducto.trim()) {
+      productosFiltrados = productosFiltrados.filter(p =>
+        p.nombre_producto && p.nombre_producto.toLowerCase().includes(this.filtros.nombreProducto.toLowerCase().trim())
+      );
+    }
+
+    if (this.filtros.marca) {
+      productosFiltrados = productosFiltrados.filter(p => p.marca === this.filtros.marca);
+    }
+
+    if (this.filtros.pasillo.trim()) {
+      productosFiltrados = productosFiltrados.filter(p =>
+        p.pasillo && p.pasillo.toString() === this.filtros.pasillo.trim()
+      );
+    }
+
+    if (this.filtros.tamano) {
+      productosFiltrados = productosFiltrados.filter(p => p.tamanio === this.filtros.tamano);
+    }
+
+    // Actualizar la lista filtrada
+    this.productos = productosFiltrados;
+  }
+
+  // Limpiar búsqueda general
+  limpiarBusqueda(): void {
+    this.filtros.textoBusqueda = '';
+    this.aplicarFiltros();
+  }
+
+  // Limpiar todos los filtros
+  limpiarTodosLosFiltros(): void {
+    this.filtros = {
+      textoBusqueda: '',
+      codigoBarras: '',
+      nombreProducto: '',
+      marca: '',
+      pasillo: '',
+      tamano: ''
+    };
+
+    this.productos = [...this.productosOriginales];
+  }
+
+  actualizarContadoresFiltros(productos: Producto[]): void {
+    this.totalProductos = productos.length;
+    this.productosActivos = productos.filter(p => p.estatus === 'activo').length;
+    this.productosInactivos = productos.filter(p => p.estatus === 'inactivo').length;
+  }
+
+  aplicarFiltroRapido(filtro: string): void {
+    this.filtroRapido = filtro;
+
+    if (filtro === 'activo') {
+      this.productos = this.productosOriginales.filter(p => p.estatus === 'activo');
+    } else if (filtro === 'inactivo') {
+      this.productos = this.productosOriginales.filter(p => p.estatus === 'inactivo');
+    } else {
+      this.productos = [...this.productosOriginales];
+    }
+
+    this.filtros = {
+      textoBusqueda: '',
+      codigoBarras: '',
+      nombreProducto: '',
+      marca: '',
+      pasillo: '',
+      tamano: ''
+    };
+  }
+
+  mostrarFiltros: boolean = false;
+
+  toggleFiltros(): void {
+    this.mostrarFiltros = !this.mostrarFiltros;
+  }
+
+  abrirModalDetalles(producto: Producto, contenidoModal: any): void {
+    this.productoSeleccionado = producto;
+
+    // Abrir el modal
+    this.modalService.open(contenidoModal, {
+      centered: true,
+      backdrop: 'static',
+      size: 'lg'
+    });
+  }
 }
