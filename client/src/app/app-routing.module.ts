@@ -11,7 +11,7 @@ import { VendedorPasilloComponent } from './vendedor-pasillo/vendedor-pasillo.co
 const routes: Routes = [
   { path: 'almacenista', component: AlmacenistaComponent },
   { path: 'inventario', component: InventarioComponent },
-  { path: 'agregar-productoss', component: AgregarProductoComponent },
+  { path: 'agregar-productos', component: AgregarProductoComponent },
   { path: 'cliente', component: ProductosComponent },
   { path: 'vendedor-pasillo', component: VendedorPasilloComponent },
   { path: '', redirectTo: '/almacenista', pathMatch: 'full' }

@@ -7,7 +7,6 @@ import { debounceTime, switchMap, catchError, takeUntil, finalize } from 'rxjs/o
 import { of } from 'rxjs';
 import { environmentDos } from '../../environments/environment';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { GestionProductoModalComponent } from '../gestion-producto-modal/gestion-producto-modal.component';
 
 @Component({
   selector: 'app-productos',
@@ -271,30 +270,7 @@ export class ProductosComponent implements OnInit, OnDestroy {
     return this.apiUrl + rutaImagen;
   }
 
-  // Métodos de gestión de productos
-  abrirModalGestion(producto: Producto): void {
-    const modalRef = this.modalService.open(GestionProductoModalComponent, {
-      size: 'lg',
-      centered: true
-    });
 
-    // Pasar datos al modal
-    modalRef.componentInstance.producto = producto;
-
-    // Manejar el resultado del modal
-    modalRef.result.then(
-      (resultado) => {
-        if (resultado === 'eliminado' || resultado === 'estatus_cambiado') {
-          // Actualizar la lista de productos
-          this.cargarProductos();
-        }
-      },
-      (razon) => {
-        // Modal fue descartado
-        console.log('Modal cancelado', razon);
-      }
-    );
-  }
 }
 
 // Declare bootstrap para poder usarlo con TypeScript
