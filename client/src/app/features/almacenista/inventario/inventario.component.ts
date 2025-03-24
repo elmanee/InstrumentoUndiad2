@@ -413,4 +413,11 @@ confirmarCambioEstatus(): void {
       size: 'lg'
     });
   }
+
+  tipoVista = 'grid'; // 'grid' o 'list'
+  cantidad = 1;
+  
+  cambiarVista(tipo: string): void {
+    this.tipoVista = tipo;
+  }
 }

@@ -55,6 +55,8 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   margin-right: 1rem;
   transition: all 0.3s ease;
+  background-color: white;
+
 }
 
 .header-logo:hover {
@@ -97,6 +99,76 @@
 
 .nav-links .nav-item .nav-link.active {
   background-color: rgba(255, 255, 255, 0.15);
+}
+
+@media (max-width: 768px) {
+  .header-title {
+    font-size: 1.1rem;
+  }
+
+  .logo-container {
+    width: 40px;
+    height: 40px;
+  }
+
+  .header-logo {
+    width: 30px;
+    height: 30px;
+  }
+
+  .btn-header-action {
+    padding: 0.4rem 0.8rem;
+  }
+
+  .product-image-container {
+    height: 180px;
+  }
+
+  .list-item-info,
+  .list-item-actions {
+    padding: 0.5rem 0;
+    border-left: none;
+  }
+
+  .detail-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .detail-icon {
+    margin-bottom: 0.5rem;
+  }
+
+  .detail-label {
+    margin-bottom: 0.25rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .header-actions {
+    gap: 0.5rem;
+  }
+
+  .product-image-container {
+    height: 160px;
+  }
+
+  .product-title {
+    font-size: 1rem;
+  }
+
+  .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  .filter-header {
+    padding: 0.75rem 1rem;
+  }
+
+  .filter-header h5 {
+    font-size: 1rem;
+  }
 }
 
 .search-bar select {

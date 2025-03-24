@@ -1,109 +1,228 @@
-<!-- product-card.component.html -->
-<div class="container mt-4">
-  <h2 class="mb-4">Catálogo de Productos</h2>
-
-  <!-- Búsqueda y Filtros -->
-  <div class="search-container">
-    <!-- Left side - Search controls -->
-    <div class="search-controls">
-      <select class="search-type-select" [(ngModel)]="searchType">
-        <option value="nombre">Por Nombre</option>
-        <option value="codigo">Por Código</option>
-        <option value="marca">Por Marca</option>
-        <option value="tamanio">Por Tamaño</option>
-        <option value="pasillo">Por Pasillo</option>
-        <option value="precio">Por Precio</option>
-      </select>
-
-      <ng-container *ngIf="searchType !== 'precio'">
-        <input
-          type="text"
-          class="search-input"
-          [placeholder]="getPlaceholderText()"
-          [(ngModel)]="searchTerm"
-          (ngModelChange)="onSearchTermChange()">
-      </ng-container>
-
-      <ng-container *ngIf="searchType === 'precio'">
-        <div class="price-range-container">
-          <input
-            type="number"
-            class="price-input"
-            placeholder="Precio mínimo"
-            [(ngModel)]="precioMin"
-            (ngModelChange)="onPriceInputChange()">
-          <input
-            type="number"
-            class="price-input"
-            placeholder="Precio máximo"
-            [(ngModel)]="precioMax"
-            (ngModelChange)="onPriceInputChange()">
+<!-- vendedor-pasillo.component.html -->
+<header class="header">
+  <div class="container-fluid bg-primary py-3">
+    <div class="row align-items-center">
+      <!-- Logo y Título -->
+      <div class="col-md-6 d-flex align-items-center">
+        <div class="bg-white rounded-circle p-1 me-3 shadow-sm">
+          <img src="../assets/logo.png" alt="Logo Carnicería" class="header-logo" style="width: 40px; height: 40px;" />
         </div>
-      </ng-container>
-
-      <button class="search-button" type="button" (click)="buscarProductos()">
-        <i class="bi bi-search"></i>
-        <span>Buscar</span>
-      </button>
+        <h2 class="text-white mb-0"><i class="fas fa-meat"></i> Sistema de Productos</h2>
+      </div>
     </div>
 
-    <!-- Right side - Filters -->
-    <div class="filter-controls">
-      <select class="status-filter" [(ngModel)]="filtroEstatus" (change)="aplicarFiltrosYBusqueda()">
-        <option value="todos">Todos los productos</option>
-        <option value="activo">Solo activos</option>
-        <option value="inactivo">Solo inactivos</option>
-      </select>
+    <div class="row mt-2">
+      <div class="col">
+        <nav class="main-nav">
+          <a class="nav-link text-white d-inline-flex align-items-center" routerLink="/almacenista" routerLinkActive="active">
+            <i class="fas fa-home me-2"></i> Inicio
+          </a>
+          <a class="nav-link text-white d-inline-flex align-items-center" routerLink="/agregar-productos" routerLinkActive="active">
+            <i class="fas fa-plus-square me-2"></i> Agregar Productos
+          </a>
+          <a class="nav-link text-white d-inline-flex align-items-center" routerLink="/inventario" routerLinkActive="active">
+            <i class="fas fa-warehouse me-2"></i> Inventario
+          </a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</header>
 
-      <button class="reset-button" (click)="resetFilters()">
-        <i class="bi bi-arrow-counterclockwise"></i>
-        <span>Mostrar todos</span>
-      </button>
+<div class="container mt-4">
+  <!-- Título con botones de acción -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex align-items-center">
+      <i class="fas fa-clipboard-list me-3 text-primary" style="font-size: 1.8rem;"></i>
+      <h2 class="mb-0">Inventario de Productos</h2>
+    </div>
+    
+  </div>
+
+  <!-- Panel de búsqueda de productos -->
+  <div class="card mb-4 border-0 shadow-sm">
+    <div class="card-body">
+      <div class="accordion" id="accordionFilters">
+        <div class="accordion-item border-0">
+          <h2 class="accordion-header" id="headingFilters">
+            <button class="accordion-button d-flex align-items-center collapsed ps-0" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFilters" aria-expanded="true" aria-controls="collapseFilters">
+              <i class="fas fa-filter me-2 text-primary"></i>
+              <span class="fw-bold">Filtros de búsqueda</span>
+            </button>
+          </h2>
+          <div id="collapseFilters" class="accordion-collapse collapse" aria-labelledby="headingFilters">
+            <div class="accordion-body pt-0">
+              <div class="row g-3">
+                <!-- Tipo de búsqueda -->
+                <div class="col-md-3">
+                  <label class="form-label small text-muted mb-1">Buscar por</label>
+                  <select class="form-select" [(ngModel)]="searchType">
+                    <option value="nombre">Por Nombre</option>
+                    <option value="codigo">Por Código</option>
+                    <option value="marca">Por Marca</option>
+                    <option value="tamanio">Por Tamaño</option>
+                    <option value="pasillo">Por Pasillo</option>
+                    <option value="precio">Por Precio</option>
+                  </select>
+                </div>
+
+                <!-- Campo de búsqueda (para todos excepto precio) -->
+                <div class="col-md-6" *ngIf="searchType !== 'precio'">
+                  <label class="form-label small text-muted mb-1">{{getPlaceholderText()}}</label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0">
+                      <i class="fas fa-search text-muted"></i>
+                    </span>
+                    <input
+                      type="text"
+                      class="form-control border-start-0"
+                      [placeholder]="getPlaceholderText()"
+                      [(ngModel)]="searchTerm"
+                      (ngModelChange)="onSearchTermChange()">
+                  </div>
+                </div>
+
+                <!-- Campos de rango de precio -->
+                <div class="col-md-6" *ngIf="searchType === 'precio'">
+                  <label class="form-label small text-muted mb-1">Rango de precios</label>
+                  <div class="d-flex gap-2">
+                    <div class="input-group">
+                      <span class="input-group-text bg-white border-end-0">
+                        <i class="fas fa-dollar-sign text-muted"></i>
+                      </span>
+                      <input
+                        type="number"
+                        class="form-control border-start-0"
+                        placeholder="Mínimo"
+                        [(ngModel)]="precioMin"
+                        (ngModelChange)="onPriceInputChange()">
+                    </div>
+                    <div class="input-group">
+                      <span class="input-group-text bg-white border-end-0">
+                        <i class="fas fa-dollar-sign text-muted"></i>
+                      </span>
+                      <input
+                        type="number"
+                        class="form-control border-start-0"
+                        placeholder="Máximo"
+                        [(ngModel)]="precioMax"
+                        (ngModelChange)="onPriceInputChange()">
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="col-md-3">
+                  <label class="form-label small text-muted mb-1">Acciones</label>
+                  <div class="d-flex gap-2">
+                    <button class="btn btn-primary flex-grow-1" (click)="buscarProductos()">
+                      <i class="fas fa-search me-1"></i> Buscar
+                    </button>
+                    <button class="btn btn-outline-secondary" (click)="resetFilters()">
+                      <i class="fas fa-sync-alt"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filtros rápidos -->
+      <div class="mt-3 d-flex flex-wrap gap-2">
+        <div class="btn-group">
+          <button
+            type="button"
+            class="btn"
+            [ngClass]="{'btn-primary': filtroEstatus === 'todos', 'btn-outline-secondary': filtroEstatus !== 'todos'}"
+            (click)="filtroEstatus = 'todos'; aplicarFiltrosYBusqueda()">
+            Todos <span class="badge bg-secondary ms-1">8</span>
+          </button>
+          <button
+            type="button"
+            class="btn"
+            [ngClass]="{'btn-primary': filtroEstatus === 'activo', 'btn-outline-secondary': filtroEstatus !== 'activo'}"
+            (click)="filtroEstatus = 'activo'; aplicarFiltrosYBusqueda()">
+            Activos <span class="badge bg-secondary ms-1">4</span>
+          </button>
+          <button
+            type="button"
+            class="btn"
+            [ngClass]="{'btn-primary': filtroEstatus === 'inactivo', 'btn-outline-secondary': filtroEstatus !== 'inactivo'}"
+            (click)="filtroEstatus = 'inactivo'; aplicarFiltrosYBusqueda()">
+            Inactivos <span class="badge bg-secondary ms-1">4</span>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Productos en cards -->
-  <div class="row row-cols-1 row-cols-md-3 g-4">
+  <!-- Cuadrícula de productos -->
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
     <div class="col" *ngFor="let producto of productosFiltrados">
-      <div class="card h-100" [ngClass]="{'border-success': producto.estatus === 'activo', 'border-danger': producto.estatus === 'inactivo'}">
-        <div class="card-header d-flex justify-content-between align-items-center"
-             [ngClass]="{'bg-success text-white': producto.estatus === 'activo', 'bg-danger text-white': producto.estatus === 'inactivo'}">
-          <h5 class="card-title mb-0">{{producto.nombre_producto}}</h5>
-          <span class="badge" [ngClass]="{'bg-light text-success': producto.estatus === 'activo', 'bg-light text-danger': producto.estatus === 'inactivo'}">
+      <div class="card h-100 border-0 shadow-sm product-card">
+        <!-- Estado del producto (etiqueta) -->
+        <div class="position-absolute top-0 end-0 m-2">
+          <span class="badge rounded-pill"
+                [ngClass]="{'bg-success': producto.estatus === 'activo', 'bg-danger': producto.estatus === 'inactivo'}">
             {{producto.estatus === 'activo' ? 'Activo' : 'Inactivo'}}
           </span>
         </div>
 
         <!-- Imagen del producto -->
-        <div class="card-img-container">
+        <div class="text-center p-3 bg-light">
           <img
             [src]="producto.imagen ? 'http://localhost:3000' + getImageUrl(producto.imagen) : 'assets/images/producto-default.jpg'"
-            class="card-img-top product-image"
+            class="product-image"
+            style="height: 120px; max-width: 100%; object-fit: contain;"
             [alt]="producto.nombre_producto"
             (error)="onImageError($event)">
-          <div class="status-indicator" [ngClass]="{'active': producto.estatus === 'activo', 'inactive': producto.estatus === 'inactivo'}"></div>
         </div>
 
-        <div class="card-body">
-          <p class="card-text"><strong>Código:</strong> {{producto.codigo_barras}}</p>
-          <p class="card-text"><strong>Estatus:</strong> {{producto.estatus}}</p>
-          <p class="card-text"><strong>Pasillo:</strong> {{producto.pasillo}}</p>
-          <p class="card-text"><strong>Precio por pieza:</strong> {{producto.precio_pieza}}</p>
-          <p class="card-text"><strong>Marca:</strong> {{producto.marca}}</p>
-          <p class="card-text"><strong>Tamaño:</strong> {{producto.tamanio}}</p>
+        <!-- Código de barras e información principal -->
+        <div class="card-body pb-0">
+          <div class="d-flex align-items-center mb-2">
+            <i class="fas fa-barcode text-primary me-2"></i>
+            <small class="text-muted">{{producto.codigo_barras}}</small>
+          </div>
+          <h5 class="card-title mb-3">{{producto.nombre_producto}}</h5>
 
-
-          <div class="row mb-2">
-            <div class="col-6">
-              <p class="card-text"><strong>Stock Exhibe:</strong> {{producto.stock_exhibe}}</p>
-            </div>
-            <div class="col-6">
-              <p class="card-text"><strong>En exhibición:</strong> {{producto.existencia_exhibe}}</p>
+          <div class="mb-3">
+            <div class="row g-2">
+              <div class="col-6">
+                <small class="d-block text-muted mb-1">Precio</small>
+                <span class="fw-bold text-primary">${{producto.precio_pieza}}</span>
+              </div>
+              <div class="col-6">
+                <small class="d-block text-muted mb-1">Pasillo</small>
+                <span>{{producto.pasillo}}</span>
+              </div>
             </div>
           </div>
-          <div class="d-grid gap-2">
-            <button class="btn btn-primary" [disabled]="producto.estatus !== 'activo'" (click)="abrirModalEdicion(producto)">
-              <i class="bi bi-pencil-square"></i> Editar
+
+          <div class="row mb-3">
+            <div class="col-6">
+              <div class="bg-light rounded p-2 text-center">
+                <small class="d-block text-muted mb-1">Stock</small>
+                <span class="fw-bold">{{producto.stock_exhibe}}</span>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="bg-light rounded p-2 text-center">
+                <small class="d-block text-muted mb-1">Exhibición</small>
+                <span class="fw-bold">{{producto.existencia_exhibe}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer bg-white border-0 pt-0">
+          <div class="d-flex gap-2">
+            <button class="btn btn-primary btn-sm flex-grow-1"
+                    [disabled]="producto.estatus !== 'activo'"
+                    (click)="abrirModalEdicion(producto)">
+              <i class="fas fa-edit me-1"></i> Editar
             </button>
           </div>
         </div>
@@ -111,78 +230,113 @@
     </div>
   </div>
 
-  <!-- Paginación -->
+  <!-- Mensaje si no hay productos -->
+  <div *ngIf="productosFiltrados.length === 0" class="text-center p-5 bg-light rounded mt-4">
+    <i class="fas fa-search" style="font-size: 3rem; color: #6c757d;"></i>
+    <h4 class="mt-3">No se encontraron productos</h4>
+    <p class="text-muted">Intenta con otros términos de búsqueda o filtros</p>
+    <button class="btn btn-outline-primary" (click)="resetFilters()">
+      <i class="fas fa-sync-alt me-2"></i>
+      Mostrar todos los productos
+    </button>
+  </div>
 
+  <!-- Indicador de carga -->
+  <div *ngIf="cargando" class="position-fixed top-50 start-50 translate-middle p-3 bg-white rounded shadow">
+    <div class="d-flex align-items-center">
+      <div class="spinner-border text-primary me-3" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+      <span>Cargando productos...</span>
+    </div>
+  </div>
 </div>
 
 <!-- Modal de edición -->
 <div class="modal fade" id="editarProductoModal" tabindex="-1" aria-labelledby="editarProductoModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow">
       <div class="modal-header bg-primary text-white">
         <h5 class="modal-title" id="editarProductoModalLabel">Actualizar Producto</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
-      <div class="modal-body">
+      <div class="modal-body p-4">
         <form *ngIf="productoSeleccionado">
-          <!-- Product information -->
-          <div class="mb-3">
-            <label for="nombreProducto" class="form-label">Nombre producto</label>
-            <input type="text" class="form-control" id="nombreProducto" [(ngModel)]="productoSeleccionado.nombre_producto" name="nombre_producto" readonly>
+          <!-- Información del producto -->
+          <div class="mb-4">
+            <label for="nombreProducto" class="form-label text-secondary small mb-1">Nombre producto</label>
+            <input
+              type="text"
+              class="form-control form-control-lg bg-light"
+              id="nombreProducto"
+              [(ngModel)]="productoSeleccionado.nombre_producto"
+              name="nombre_producto"
+              readonly>
           </div>
 
-          <!-- Current inventory status -->
-          <div class="row">
+          <!-- Estado actual del inventario -->
+          <div class="row g-3 mb-4">
             <div class="col-md-6">
-              <div class="mb-3">
-                <label for="existenciaAlmacen" class="form-label">Existencia en almacén</label>
-                <input type="number" class="form-control" id="existenciaAlmacen"
-                      [(ngModel)]="productoSeleccionado.existencia_almacen"
-                      name="existencia_almacen" readonly>
-                <small class="form-text text-muted">Inventario disponible</small>
-              </div>
+              <label for="existenciaAlmacen" class="form-label text-secondary small mb-1">Existencia en almacén</label>
+              <input
+                type="number"
+                class="form-control bg-light"
+                id="existenciaAlmacen"
+                [(ngModel)]="productoSeleccionado.existencia_almacen"
+                name="existencia_almacen"
+                readonly>
+              <small class="form-text text-muted">Inventario disponible</small>
             </div>
             <div class="col-md-6">
-              <div class="mb-3">
-                <label for="existenciaExhibe" class="form-label">Existencia en exhibición</label>
-                <input type="number" class="form-control" id="existenciaExhibe"
-                      [(ngModel)]="productoSeleccionado.existencia_exhibe"
-                      name="existencia_exhibe" readonly>
-                <small class="form-text text-muted">Cantidad actual en exhibición</small>
-              </div>
+              <label for="existenciaExhibe" class="form-label text-secondary small mb-1">Existencia en exhibición</label>
+              <input
+                type="number"
+                class="form-control bg-light"
+                id="existenciaExhibe"
+                [(ngModel)]="productoSeleccionado.existencia_exhibe"
+                name="existencia_exhibe"
+                readonly>
+              <small class="form-text text-muted">Cantidad actual en exhibición</small>
             </div>
           </div>
 
-          <!-- Editable fields -->
-          <div class="row">
+          <!-- Campos editables -->
+          <div class="row g-3 mb-4">
             <div class="col-md-6">
-              <div class="mb-3">
-                <label for="stockExhibe" class="form-label">Stock objetivo</label>
-                <input type="number" class="form-control" id="stockExhibe"
-                      [(ngModel)]="productoSeleccionado.stock_exhibe"
-                      name="stock_exhibe" readonly>
-              </div>
+              <label for="stockExhibe" class="form-label text-secondary small mb-1">Stock objetivo</label>
+              <input
+                type="number"
+                class="form-control bg-light"
+                id="stockExhibe"
+                [(ngModel)]="productoSeleccionado.stock_exhibe"
+                name="stock_exhibe"
+                readonly>
             </div>
             <div class="col-md-6">
-              <div class="mb-3">
-                <label for="cantidadRellenar" class="form-label">Cantidad a transferir</label>
-                <input type="number" class="form-control" id="cantidadRellenar"
-                      [(ngModel)]="productoSeleccionado.cantidad_rellenar"
-                      name="cantidad_rellenar"
-                      min="0"
-                      [max]="productoSeleccionado.existencia_almacen">
-                <small class="form-text text-muted">Esta cantidad se transferirá de almacén a exhibición</small>
-              </div>
+              <label for="cantidadRellenar" class="form-label text-secondary small mb-1">Cantidad a transferir</label>
+              <input
+                type="number"
+                class="form-control"
+                id="cantidadRellenar"
+                [(ngModel)]="productoSeleccionado.cantidad_rellenar"
+                name="cantidad_rellenar"
+                min="0"
+                [max]="productoSeleccionado.existencia_almacen">
+              <small class="form-text text-muted">Esta cantidad se transferirá de almacén a exhibición</small>
             </div>
           </div>
         </form>
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-primary" (click)="actualizarProducto()">Actualizar</button>
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" (click)="actualizarProducto()">
+          <i class="fas fa-save me-1"></i> Actualizar
+        </button>
       </div>
     </div>
   </div>
 </div>
+
+

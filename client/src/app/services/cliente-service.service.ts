@@ -55,4 +55,8 @@ export class ClienteService {
     return this.http.get<ProductoResponse>(`${this.APIURL}/obtener_productos/cliente/marca/${marca}`);
   }
 
+  getProductByCodigo(codifo_barras: string): Observable<ProductoResponse> {
+    return this.http.get<ProductoResponse>(`${this.APIURL}/obtener_productos/cliente/marca/${codifo_barras}`);
+  }
+
 }
