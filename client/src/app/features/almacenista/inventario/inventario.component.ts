@@ -5,6 +5,9 @@ import { FormsModule } from '@angular/forms';
 import { AlmacenistaService, Producto } from '../../../services/almacenista.service';
 import { NgbModal, NgbDate, NgbCalendar, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModalModule, NgbDatepickerModule} from '@ng-bootstrap/ng-bootstrap';
+import { ProductExportService } from '../../../services/product-export-service.service';
+import { PdfExportService } from '../../../services/pdf-export-service.service';
+
 
 
 @Component({
@@ -76,6 +79,8 @@ export class InventarioComponent implements OnInit {
   constructor(
     private almacenistaService: AlmacenistaService,
     private modalService: NgbModal,
+    private productExportService: ProductExportService,
+    private pdfExportService: PdfExportService
   ) {
     const hoy = new Date();
   const minFecha = new Date();
@@ -416,8 +421,36 @@ confirmarCambioEstatus(): void {
 
   tipoVista = 'grid'; // 'grid' o 'list'
   cantidad = 1;
-  
+
   cambiarVista(tipo: string): void {
     this.tipoVista = tipo;
+  }
+
+
+  exportarExcel(): void {
+    if (this.productos.length > 0) {
+      this.productExportService.exportToExcel(this.productos, 'Inventario_Productos');
+    } else {
+      // Mostrar un mensaje al usuario de que no hay productos para exportar
+      alert('No hay productos para exportar');
+    }
+  }
+
+  exportarCsv(): void {
+    if (this.productos.length > 0) {
+      this.productExportService.exportToCsv(this.productos, 'Inventario_Productos');
+    } else {
+      // Mostrar un mensaje al usuario de que no hay productos para exportar
+      alert('No hay productos para exportar');
+    }
+  }
+  
+  exportarPdf(): void {
+    if (this.productos.length > 0) {
+      this.pdfExportService.exportToPdf(this.productos, 'Inventario_Productos');
+    } else {
+      // Manejar caso de lista vacía
+      alert('No hay productos para exportar');
+    }
   }
 }

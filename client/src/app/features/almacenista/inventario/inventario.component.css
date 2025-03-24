@@ -65,22 +65,17 @@
   margin-right: 0.5rem;
 }
 
-/* Contenedor principal */
-.inventory-container {
-  background-color: #f8f9fa;
-  min-height: calc(100vh - 140px);
-}
 
 /* Encabezado del inventario */
 .inventory-header {
-  background-color: var(--white);
+  background-color: var(--white, #ffffff);
   border-radius: 10px;
   padding: 1.5rem;
-  box-shadow: var(--shadow);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .inventory-title {
-  color: var(--secondary);
+  color: var(--secondary, #6c757d);
   font-weight: 600;
   margin: 0;
   display: flex;
@@ -88,7 +83,50 @@
 }
 
 .inventory-title i {
-  color: var(--primary);
+  color: var(--primary, #007bff);
+  margin-right: 0.75rem;
+}
+
+/* Botones de acción */
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.dropdown .btn-outline-secondary {
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.dropdown .btn-outline-secondary:hover {
+  background-color: #f8f9fa;
+  border-color: #6c757d;
+}
+
+.dropdown-menu {
+  min-width: 180px;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-item i {
+  margin-right: 0.5rem;
+  color: #6c757d;
+}
+
+.btn-primary {
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
 }
 
 .action-buttons {

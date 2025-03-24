@@ -27,6 +27,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NotificacionesComponent } from './notificaciones.component';
 import { NgbModule  } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+
 
 
 
@@ -50,7 +52,8 @@ import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
     CommonModule,
     NotificacionesComponent,
     NgbModule,
-    NgbDatepickerModule
+    NgbDatepickerModule,
+    NgbDropdownModule
 
     // Si necesitas usar InventarioComponent en rutas, déjalo configurado en AppRoutingModule
   ],
