@@ -651,4 +651,6 @@ private aplicarFiltrosAdicionales(): void {
   // Actualizar la lista filtrada
   this.productos = productosFiltrados;
 }
+
+
 }

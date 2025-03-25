@@ -70,18 +70,8 @@ export class ProductoService {
   }
 
   obtenerProductosPorPasillo(pasillo: string): Observable<Producto[]> {
-    return this.http.get<Producto[]>(`${this.apiUrl}/obtener_producto/pasillo/${pasillo}`)
-      .pipe(
-        retry(1),
-        catchError((error) => {
-          if (error.status === 404) {
-            console.warn(`No hay prodcutos en pasillo : ${pasillo}`);
-            return of([]);
-          }
-          return this.handleError(error);
-        })
-      );
-  }
+    return this.http.get<Producto[]>(`${this.apiUrl}/obtener_producto/pasillo/${pasillo}`);
+}
 
   obtenerProductosPorPrecio(precioMin: number, precioMax: number): Observable<Producto[]> {
     const rangoString = `${precioMin}-${precioMax}`;

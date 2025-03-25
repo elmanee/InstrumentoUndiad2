@@ -593,7 +593,7 @@
 
 .modal-header {
   background: linear-gradient(to right, var(--secondary), var(--primary));
-  color: var(--white);
+  color: white;
   border-bottom: none;
   padding: 1.2rem 1.5rem;
 }

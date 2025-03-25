@@ -88,25 +88,24 @@ export const obtenerProductosTamanio = async (req: Request, res: Response):Promi
 }
 
 /obtiene producto por pasillo- vendedor/
-export const obtenerProductosPasillo = async (req: Request, res:Response): Promise<void> => {
+export const obtenerProductosPasillo = async (req: Request, res: Response): Promise<void> => {
   const { pasillo } = req.params;
 
   try {
-    const pasillos = await Producto.find(
-      { pasillo: {$regex: new RegExp(pasillo,'i')}}
-    );
+    // Cambiamos findOne por find para obtener todos los productos del pasillo
+    const productos = await Producto.find({ pasillo });
 
-    if( pasillos.length === 0){
-      res.status(404).json({ message: `No existe el pasillo ${pasillo}`})
-      return
+    if (!productos || productos.length === 0) {
+      res.status(404).json({ message: `No existen productos en el pasillo ${pasillo}` });
+      return;
     }
 
-    res.status(200).json(pasillos);
-    
-  } catch (error:any) {
-    res.status(500).json({ message: error.message})
+    res.status(200).json(productos);
+    console.log('Productos encontrados en pasillo:', productos.length);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
   }
-}
+};
 
 /obtiene producto por precio entre un rango- vendedor/
 export const obtenerProductosPrecio = async (req: Request, res: Response): Promise<void> => {

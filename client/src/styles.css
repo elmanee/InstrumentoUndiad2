@@ -15,3 +15,11 @@
     background-color: var(--bs-primary) !important;
     border-color: var(--bs-primary) !important;
   }
+
+  :root {
+    --primary: #d62828;
+    --secondary: #003049;
+    --success: #28a745;
+    --danger: #dc3545;
+    /* Resto de variables */
+  }

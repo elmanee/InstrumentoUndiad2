@@ -6,6 +6,7 @@ import { Modal } from 'bootstrap';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, finalize, map } from 'rxjs/operators';
 
+
 @Component({
   selector: 'app-vendedor-pasillo',
   standalone: false,
@@ -350,11 +351,82 @@ export class VendedorPasilloComponent implements OnInit {
   }
 
   onSearchTermChange(): void {
-    // si el ternimo de buscaqueda esta vacio recargamos los productos
+    // Si el campo de búsqueda está vacío, recargar productos
     if (!this.searchTerm.trim()) {
-      this.cargarProductos();
+        this.cargarProductos();
+        return;
     }
+
+    // Para pasillo, esperar a que el usuario termine de escribir
+    if (this.searchType === 'pasillo') {
+        // Solo buscar si hay un valor completo de pasillo
+        if (this.searchTerm.trim().length >= 1) {
+            this.buscarProductosEnTiempoReal();
+        }
+    } else {
+        // Para otros campos, comienza a buscar desde 2 caracteres
+        if (this.searchTerm.trim().length >= 2) {
+            this.buscarProductosEnTiempoReal();
+        }
+    }
+}
+
+buscarProductosEnTiempoReal(): void {
+  let searchObservable: Observable<any>;
+
+  switch (this.searchType) {
+      case 'nombre':
+          searchObservable = this.productoService.obtenerProductosPorNombre(
+              this.searchTerm
+          );
+          break;
+      case 'codigo':
+          searchObservable = this.productoService
+              .obtenerProductoPorCodigo(this.searchTerm)
+              .pipe(
+                  map((producto) => [producto]),
+                  catchError((error) => {
+                      if (error.status === 404) {
+                          return of([]);
+                      }
+                      return throwError(() => error);
+                  })
+              );
+          break;
+      case 'marca':
+          searchObservable = this.productoService.obtenerProductosPorMarca(
+              this.searchTerm.trim()
+          );
+          break;
+      case 'tamanio':
+          searchObservable = this.productoService.obtenerProductosPorTamanio(
+              this.searchTerm.trim()
+          );
+          break;
+      case 'pasillo':
+          if (!this.searchTerm || this.searchTerm.trim() === '') {
+              return;
+          }
+
+          const pasilloTerm = this.searchTerm.trim();
+          searchObservable = this.productoService.obtenerProductosPorPasillo(pasilloTerm);
+          break;
+      default:
+          return;
   }
+
+  searchObservable.subscribe({
+      next: (productos) => {
+          if (productos && productos.length > 0) {
+              this.productos = [...productos];
+              this.aplicarFiltrosYBusqueda();
+          }
+      },
+      error: (err) => {
+          console.error(`Error en búsqueda en tiempo real: ${err}`);
+      }
+  });
+}
 
   onPriceInputChange(): void {
     // carga todos los procutos ti los campos de precio estan vacios

@@ -36,7 +36,6 @@
       <i class="fas fa-clipboard-list me-3 text-primary" style="font-size: 1.8rem;"></i>
       <h2 class="mb-0">Inventario de Productos</h2>
     </div>
-
   </div>
 
   <!-- Panel de búsqueda de productos -->
@@ -137,21 +136,21 @@
             class="btn"
             [ngClass]="{'btn-primary': filtroEstatus === 'todos', 'btn-outline-secondary': filtroEstatus !== 'todos'}"
             (click)="filtroEstatus = 'todos'; aplicarFiltrosYBusqueda()">
-            Todos <span class="badge bg-secondary ms-1">8</span>
+            Todos <span class="badge bg-secondary ms-1"></span>
           </button>
           <button
             type="button"
             class="btn"
             [ngClass]="{'btn-primary': filtroEstatus === 'activo', 'btn-outline-secondary': filtroEstatus !== 'activo'}"
             (click)="filtroEstatus = 'activo'; aplicarFiltrosYBusqueda()">
-            Activos <span class="badge bg-secondary ms-1">4</span>
+            Activos <span class="badge bg-secondary ms-1"></span>
           </button>
           <button
             type="button"
             class="btn"
             [ngClass]="{'btn-primary': filtroEstatus === 'inactivo', 'btn-outline-secondary': filtroEstatus !== 'inactivo'}"
             (click)="filtroEstatus = 'inactivo'; aplicarFiltrosYBusqueda()">
-            Inactivos <span class="badge bg-secondary ms-1">4</span>
+            Inactivos <span class="badge bg-secondary ms-1"></span>
           </button>
         </div>
       </div>
@@ -162,11 +161,12 @@
   <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
     <div class="col" *ngFor="let producto of productosFiltrados">
       <div class="card h-100 border-0 shadow-sm product-card">
-        <!-- Estado del producto (etiqueta) -->
+        <!-- Estado del producto (etiqueta estandarizada) -->
         <div class="position-absolute top-0 end-0 m-2">
-          <span class="badge rounded-pill"
-                [ngClass]="{'bg-success': producto.estatus === 'activo', 'bg-danger': producto.estatus === 'inactivo'}">
-            {{producto.estatus === 'activo' ? 'Activo' : 'Inactivo'}}
+          <span class="status-badge"
+                [ngClass]="producto.estatus === 'activo' ? 'status-badge-active' : 'status-badge-inactive'">
+            <i class="fas" [ngClass]="producto.estatus === 'activo' ? 'fa-check-circle' : 'fa-times-circle'"></i>
+            {{producto.estatus}}
           </span>
         </div>
 
@@ -225,6 +225,7 @@
           </div>
         </div>
 
+        <!-- Botones de acción estandarizados -->
         <div class="card-footer bg-white border-0 pt-0">
           <div class="d-flex gap-2">
             <button class="btn btn-primary btn-sm flex-grow-1"
@@ -238,6 +239,7 @@
     </div>
   </div>
 
+
   <!-- Mensaje si no hay productos -->
   <div *ngIf="productosFiltrados.length === 0" class="text-center p-5 bg-light rounded mt-4">
     <i class="fas fa-search" style="font-size: 3rem; color: #6c757d;"></i>
@@ -249,7 +251,7 @@
     </button>
   </div>
 
-  <!-- Indicador de carga -->
+  <!-- Indicador de carga estandarizado -->
   <div *ngIf="cargando" class="position-fixed top-50 start-50 translate-middle p-3 bg-white rounded shadow">
     <div class="d-flex align-items-center">
       <div class="spinner-border text-primary me-3" role="status">
@@ -260,7 +262,7 @@
   </div>
 </div>
 
-<!-- Modal de edición -->
+<!-- Modal de edición estandarizado -->
 <div class="modal fade" id="editarProductoModal" tabindex="-1" aria-labelledby="editarProductoModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0 shadow">
@@ -271,16 +273,13 @@
 
       <div class="modal-body p-4">
         <form *ngIf="productoSeleccionado">
-          <!-- Información del producto -->
-          <div class="mb-4">
-            <label for="nombreProducto" class="form-label text-secondary small mb-1">Nombre producto</label>
-            <input
-              type="text"
-              class="form-control form-control-lg bg-light"
-              id="nombreProducto"
-              [(ngModel)]="productoSeleccionado.nombre_producto"
-              name="nombre_producto"
-              readonly>
+          <!-- Información del producto con indicador de estado estandarizado -->
+          <div class="d-flex align-items-center mb-3">
+            <h5 class="mb-0 me-2">{{productoSeleccionado.nombre_producto}}</h5>
+            <span class="status-badge"
+                  [ngClass]="productoSeleccionado.estatus === 'activo' ? 'status-badge-active' : 'status-badge-inactive'">
+              {{productoSeleccionado.estatus}}
+            </span>
           </div>
 
           <!-- Estado actual del inventario -->
@@ -337,8 +336,11 @@
         </form>
       </div>
 
+      <!-- Botones estandarizados -->
       <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+          <i class="fas fa-times me-1"></i> Cancelar
+        </button>
         <button type="button" class="btn btn-primary" (click)="actualizarProducto()">
           <i class="fas fa-save me-1"></i> Actualizar
         </button>

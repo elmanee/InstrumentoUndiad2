@@ -45,369 +45,282 @@
 </header>
 
 <!-- Inventario de Productos -->
-<div class="container-fluid inventory-container py-4">
-  <!-- Encabezado con acciones -->
-  <div class="inventory-header mb-4">
-    <div class="row align-items-center">
-      <div class="col-md-6">
-        <h2 class="inventory-title">
-          <i class="fas fa-clipboard-list me-3"></i>Inventario de Productos
-        </h2>
-      </div>
-      <div class="col-md-6 d-flex justify-content-end">
-        <div class="dropdown me-2">
-          <button class="btn btn-outline-secondary dropdown-toggle"
-                  type="button"
-                  id="exportDropdown"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false">
-            <i class="fas fa-file-export me-2"></i>Exportar
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="exportDropdown">
-            <li>
-              <a class="dropdown-item" (click)="exportarExcel()">
-                <i class="far fa-file-excel me-2"></i>Exportar a Excel
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" (click)="exportarCsv()">
-                <i class="far fa-file-csv me-2"></i>Exportar a CSV
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" (click)="exportarPdf()">
-                <i class="far fa-file-pdf me-2"></i>Exportar a PDF
-              </a>
-            </li>
-          </ul>
+<div class="container mt-4">
+  <div class="container-fluid inventory-container py-4">
+    <!-- Encabezado con acciones -->
+    <div class="inventory-header mb-4">
+      <div class="row align-items-center">
+        <div class="col-md-6">
+          <h2 class="inventory-title">
+            <i class="fas fa-clipboard-list me-3"></i>Inventario de Productos
+          </h2>
         </div>
+        <div class="col-md-6 d-flex justify-content-end">
+          <div class="dropdown me-2">
+            <button class="btn btn-outline-secondary dropdown-toggle"
+                    type="button"
+                    id="exportDropdown"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false">
+              <i class="fas fa-file-export me-2"></i>Exportar
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+              <li>
+                <a class="dropdown-item" (click)="exportarExcel()">
+                  <i class="far fa-file-excel me-2"></i>Exportar a Excel
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" (click)="exportarCsv()">
+                  <i class="far fa-file-csv me-2"></i>Exportar a CSV
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" (click)="exportarPdf()">
+                  <i class="far fa-file-pdf me-2"></i>Exportar a PDF
+                </a>
+              </li>
+            </ul>
+          </div>
 
-        <button class="btn btn-primary" routerLink="/agregar-productos">
-          <i class="fas fa-plus me-2"></i>Nuevo Producto
-        </button>
+          <button class="btn btn-primary" routerLink="/agregar-productos">
+            <i class="fas fa-plus me-2"></i>Nuevo Producto
+          </button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Filtros de búsqueda simplificados -->
-  <div class="filter-section mb-4">
-    <div
-      class="d-flex justify-content-between align-items-center p-3 bg-light rounded"
-      (click)="toggleFiltros()"
-    >
-      <div>
-        <i class="fas fa-filter me-2"></i>
-        <span class="fw-medium">Filtros de búsqueda</span>
+    <!-- Filtros de búsqueda simplificados -->
+    <div class="filter-section mb-4">
+      <div
+        class="d-flex justify-content-between align-items-center p-3 bg-light rounded"
+        (click)="toggleFiltros()"
+      >
+        <div>
+          <i class="fas fa-filter me-2"></i>
+          <span class="fw-medium">Filtros de búsqueda</span>
+        </div>
+        <i
+          class="fas"
+          [ngClass]="mostrarFiltros ? 'fa-chevron-up' : 'fa-chevron-down'"
+        ></i>
       </div>
-      <i
-        class="fas"
-        [ngClass]="mostrarFiltros ? 'fa-chevron-up' : 'fa-chevron-down'"
-      ></i>
-    </div>
 
-    <div
-      [ngClass]="{ 'd-none': !mostrarFiltros }"
-      class="card border-0 shadow-sm mt-2"
-    >
-      <div class="card-body">
-        <div class="row g-3">
-          <!-- Filtros específicos solicitados -->
-          <div class="col-md-6 col-lg-4">
-            <label class="form-label">Código de barras</label>
-            <div class="input-group">
-              <span class="input-group-text text-black">
-                <i class="fas fa-barcode"></i>
-              </span>
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Ej: 7501234567890"
-                [(ngModel)]="filtros.codigoBarras"
-                (input)="aplicarFiltros()"
-              />
+      <div
+        [ngClass]="{ 'd-none': !mostrarFiltros }"
+        class="card border-0 shadow-sm mt-2"
+      >
+        <div class="card-body">
+          <div class="row g-3">
+            <!-- Filtros específicos solicitados -->
+            <div class="col-md-6 col-lg-4">
+              <label class="form-label">Código de barras</label>
+              <div class="input-group">
+                <span class="input-group-text text-black">
+                  <i class="fas fa-barcode"></i>
+                </span>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Ej: 7501234567890"
+                  [(ngModel)]="filtros.codigoBarras"
+                  (input)="aplicarFiltros()"
+                />
+              </div>
             </div>
-          </div>
 
-          <div class="col-md-6 col-lg-4">
-            <label class="form-label">Nombre del producto</label>
-            <div class="input-group">
-              <span class="input-group-text text-black">
-                <i class="fas fa-tag"></i>
-              </span>
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Nombre"
-                [(ngModel)]="filtros.nombreProducto"
-                (input)="aplicarFiltros()"
-              />
+            <div class="col-md-6 col-lg-4">
+              <label class="form-label">Nombre del producto</label>
+              <div class="input-group">
+                <span class="input-group-text text-black">
+                  <i class="fas fa-tag"></i>
+                </span>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Nombre"
+                  [(ngModel)]="filtros.nombreProducto"
+                  (input)="aplicarFiltros()"
+                />
+              </div>
             </div>
-          </div>
 
-          <div class="col-md-6 col-lg-4">
-            <label class="form-label">Marca</label>
-            <select
-              class="form-select"
-              [(ngModel)]="filtros.marca"
-              (change)="aplicarFiltros()"
-            >
-              <option value="">Todas las marcas</option>
-              <option *ngFor="let marca of marcasDisponibles" [value]="marca">
-                {{ marca }}
-              </option>
-            </select>
-          </div>
-
-          <div class="col-md-6 col-lg-4">
-            <label class="form-label">Pasillo</label>
-            <div class="input-group">
-              <span class="input-group-text text-black">
-                <i class="fas fa-map-marker-alt"></i>
-              </span>
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Número de pasillo"
-                [(ngModel)]="filtros.pasillo"
-                (input)="aplicarFiltros()"
-              />
-            </div>
-          </div>
-
-          <div class="col-md-6 col-lg-4">
-            <label class="form-label">Tamaño</label>
-            <select
-              class="form-select"
-              [(ngModel)]="filtros.tamano"
-              (change)="aplicarFiltros()"
-            >
-              <option value="">Todos los tamaños</option>
-              <option
-                *ngFor="let tamano of tamanosDisponibles"
-                [value]="tamano"
+            <div class="col-md-6 col-lg-4">
+              <label class="form-label">Marca</label>
+              <select
+                class="form-select"
+                [(ngModel)]="filtros.marca"
+                (change)="aplicarFiltros()"
               >
-                {{ tamano }}
-              </option>
-            </select>
-          </div>
-
-          <!-- Botones de acción -->
-          <div class="col-12 text-end mt-3">
-            <button
-              class="btn btn-outline-secondary me-2"
-              (click)="limpiarTodosLosFiltros()"
-            >
-              <i class="fas fa-undo me-1"></i> Limpiar filtros
-            </button>
-            <button class="btn btn-primary" (click)="aplicarFiltros()">
-              <i class="fas fa-search me-1"></i> Buscar
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Filtros rápidos (pills) -->
-  <div class="inventory-controls mb-4">
-    <div class="row align-items-center">
-      <div class="col-md-8">
-        <div class="filter-pills">
-          <span class="filter-label me-2">Filtros rápidos:</span>
-          <div
-            class="pill"
-            [class.active]="filtroRapido === ''"
-            (click)="aplicarFiltroRapido('')"
-          >
-            Todos
-            <span class="pill-count">{{ totalProductos }}</span>
-          </div>
-          <div
-            class="pill"
-            [class.active]="filtroRapido === 'activo'"
-            (click)="aplicarFiltroRapido('activo')"
-          >
-            Activos
-            <span class="pill-count">{{ productosActivos }}</span>
-          </div>
-          <div
-            class="pill"
-            [class.active]="filtroRapido === 'inactivo'"
-            (click)="aplicarFiltroRapido('inactivo')"
-          >
-            Inactivos
-            <span class="pill-count">{{ productosInactivos }}</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-4 text-end">
-        <div class="view-options">
-          <div class="btn-group">
-            <button
-              class="btn btn-sm"
-              [ngClass]="tipoVista === 'grid' ? 'btn-primary' : 'btn-outline-primary'"
-              (click)="cambiarVista('grid')"
-              title="Vista de cuadrícula"
-            >
-              <i class="fas fa-th-large"></i>
-            </button>
-            <button
-              class="btn btn-sm"
-              [ngClass]="tipoVista === 'list' ? 'btn-primary' : 'btn-outline-primary'"
-              (click)="cambiarVista('list')"
-              title="Vista de lista"
-            >
-              <i class="fas fa-list"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Vista de cuadrícula CORREGIDA -->
-  <div
-    class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4"
-    *ngIf="tipoVista === 'grid' && !cargando && productos.length > 0"
-  >
-    <!-- Tarjeta de Producto -->
-    <div class="col" *ngFor="let producto of productos">
-      <div class="product-card">
-        <!-- Imagen del producto con indicador de estado -->
-        <div class="status-tag" [ngClass]="producto.estatus === 'activo' ? 'status-active' : 'status-inactive'">
-          <i class="fas" [ngClass]="producto.estatus === 'activo' ? 'fa-check-circle' : 'fa-times-circle'"></i>
-          {{ producto.estatus }}
-        </div>
-        <div class="product-image">
-          <img
-            *ngIf="producto.imagen"
-            [src]="'http://localhost:3000' + getImageUrl(producto.imagen)"
-            class="product-img"
-            [alt]="producto.nombre_producto"
-          />
-
-          <!-- Mostrar placeholder cuando no hay imagen -->
-          <div *ngIf="!producto.imagen" class="product-img-placeholder">
-            <i class="fas fa-drumstick-bite"></i>
-          </div>
-        </div>
-
-        <!-- Información del producto -->
-        <div class="product-info">
-          <!-- Código de barras -->
-          <div class="product-code">
-            <i class="fas fa-barcode"></i> {{ producto.codigo_barras }}
-          </div>
-
-          <h3 class="product-name">{{ producto.nombre_producto }}</h3>
-
-          <div class="product-price">
-            <i class="fas fa-tag"></i> ${{ producto.precio_pieza }}
-          </div>
-
-          <!-- Inventario -->
-          <div class="product-stock">
-            <div class="stock-row">
-              <div class="stock-label">Stock Objetivo:</div>
-              <div class="stock-value">{{ producto.stock_exhibe }}</div>
+                <option value="">Todas las marcas</option>
+                <option *ngFor="let marca of marcasDisponibles" [value]="marca">
+                  {{ marca }}
+                </option>
+              </select>
             </div>
-            <div class="stock-row">
-              <div class="stock-label">Existencia:</div>
-              <div class="stock-value">{{ producto.existencia_exhibe }}</div>
+
+            <div class="col-md-6 col-lg-4">
+              <label class="form-label">Pasillo</label>
+              <div class="input-group">
+                <span class="input-group-text text-black">
+                  <i class="fas fa-map-marker-alt"></i>
+                </span>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Número de pasillo"
+                  [(ngModel)]="filtros.pasillo"
+                  (input)="aplicarFiltros()"
+                />
+              </div>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <label class="form-label">Tamaño</label>
+              <select
+                class="form-select"
+                [(ngModel)]="filtros.tamano"
+                (change)="aplicarFiltros()"
+              >
+                <option value="">Todos los tamaños</option>
+                <option
+                  *ngFor="let tamano of tamanosDisponibles"
+                  [value]="tamano"
+                >
+                  {{ tamano }}
+                </option>
+              </select>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="col-12 text-end mt-3">
+              <button
+                class="btn btn-outline-secondary me-2"
+                (click)="limpiarTodosLosFiltros()"
+              >
+                <i class="fas fa-undo me-1"></i> Limpiar filtros
+              </button>
+              <button class="btn btn-primary" (click)="aplicarFiltros()">
+                <i class="fas fa-search me-1"></i> Buscar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filtros rápidos (pills) -->
+    <div class="inventory-controls mb-4">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <div class="filter-pills">
+            <span class="filter-label me-2">Filtros rápidos:</span>
+            <div
+              class="pill"
+              [class.active]="filtroRapido === ''"
+              (click)="aplicarFiltroRapido('')"
+            >
+              Todos
+              <span class="pill-count"></span>
+            </div>
+            <div
+              class="pill"
+              [class.active]="filtroRapido === 'activo'"
+              (click)="aplicarFiltroRapido('activo')"
+            >
+              Activos
+              <span class="pill-count"></span>
+            </div>
+            <div
+              class="pill"
+              [class.active]="filtroRapido === 'inactivo'"
+              (click)="aplicarFiltroRapido('inactivo')"
+            >
+              Inactivos
+              <span class="pill-count"></span>
             </div>
           </div>
         </div>
 
-        <!-- Acciones -->
-        <div class="d-flex justify-content-end">
-          <button class="btn btn-sm btn-info me-2" (click)="abrirModalDetalles(producto, modalDetalles)">
-            <i class="fas fa-info-circle"></i>
-          </button>
-          <button class="btn btn-sm btn-warning me-2" (click)="abrirModalEdicion(producto, modalEdicion)">
-            <i class="fas fa-edit"></i>
-          </button>
-          <button class="btn btn-sm btn-danger" (click)="abrirModalEliminar(producto, modalProducto)">
-            <i class="fas fa-trash"></i>
-          </button>
+        <div class="col-md-4 text-end">
+          <div class="view-options">
+            <div class="btn-group">
+              <button
+                class="btn btn-sm"
+                [ngClass]="tipoVista === 'grid' ? 'btn-primary' : 'btn-outline-primary'"
+                (click)="cambiarVista('grid')"
+                title="Vista de cuadrícula"
+              >
+                <i class="fas fa-th-large"></i>
+              </button>
+              <button
+                class="btn btn-sm"
+                [ngClass]="tipoVista === 'list' ? 'btn-primary' : 'btn-outline-primary'"
+                (click)="cambiarVista('list')"
+                title="Vista de lista"
+              >
+                <i class="fas fa-list"></i>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Sección de productos - Vista de lista -->
-  <!-- Sección de productos - Vista de lista -->
-<div class="product-list" *ngIf="tipoVista === 'list' && !cargando && productos.length > 0">
-  <div class="list-item" *ngFor="let producto of productos">
-    <div class="row g-0">
-      <!-- Imagen del producto -->
-      <div class="col-md-2">
-        <div class="list-item-image">
-          <img
-            *ngIf="producto.imagen"
-            [src]="'http://localhost:3000' + getImageUrl(producto.imagen)"
-            [alt]="producto.nombre_producto"
-            class="img-fluid"
-            onerror="this.src='assets/img/placeholder.png'"
-          />
-          <div *ngIf="!producto.imagen" class="product-img-placeholder">
-            <i class="fas fa-drumstick-bite"></i>
-          </div>
-          <div
-            class="status-badge"
-            [ngClass]="producto.estatus === 'activo' ? 'badge-success' : 'badge-danger'"
-          >
+    <!-- Vista de cuadrícula CORREGIDA -->
+    <div
+      class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4"
+      *ngIf="tipoVista === 'grid' && !cargando && productos.length > 0"
+    >
+      <!-- Tarjeta de Producto -->
+      <div class="col" *ngFor="let producto of productos">
+        <div class="product-card">
+          <!-- Imagen del producto con indicador de estado -->
+          <div class="status-tag" [ngClass]="producto.estatus === 'activo' ? 'status-active' : 'status-inactive'">
             <i class="fas" [ngClass]="producto.estatus === 'activo' ? 'fa-check-circle' : 'fa-times-circle'"></i>
             {{ producto.estatus }}
           </div>
-        </div>
-      </div>
+          <div class="product-image">
+            <img
+              *ngIf="producto.imagen"
+              [src]="'http://localhost:3000' + getImageUrl(producto.imagen)"
+              class="product-img"
+              [alt]="producto.nombre_producto"
+            />
 
-      <!-- Información del producto -->
-      <div class="col-md-6">
-        <div class="list-item-info p-3">
-          <div class="d-flex align-items-center mb-2">
-            <span class="product-code me-2">
-              <i class="fas fa-barcode me-1"></i>{{ producto.codigo_barras }}
-            </span>
-          </div>
-
-          <h5 class="list-item-title">{{ producto.nombre_producto }}</h5>
-
-          <div class="mb-2">
-            <span class="badge me-2 bg-light text-dark">
-              <i class="fas fa-tag me-1"></i>{{ producto.marca || 'Sin marca' }}
-            </span>
-            <span class="badge bg-light text-dark">
-              <i class="fas fa-box me-1"></i>{{ producto.tamanio || 'Sin tamaño' }}
-            </span>
-          </div>
-
-          <div class="product-location" *ngIf="producto.pasillo">
-            <i class="fas fa-map-marker-alt me-1"></i>
-            <small>Pasillo: {{ producto.pasillo }}</small>
-          </div>
-        </div>
-      </div>
-
-      <!-- Precio y acciones -->
-      <div class="col-md-4">
-        <div class="list-item-actions p-3">
-          <div class="product-price mb-3">
-            <i class="fas fa-tag me-1"></i>$ {{ producto.precio_pieza }}
-          </div>
-
-          <div class="inventory-stats mb-3">
-            <div class="inventory-item d-flex justify-content-between">
-              <span class="inventory-label">Stock:</span>
-              <span class="inventory-value fw-bold">{{ producto.stock_almacen }}</span>
-            </div>
-            <div class="inventory-item d-flex justify-content-between">
-              <span class="inventory-label">Existencia:</span>
-              <span class="inventory-value fw-bold">{{ producto.existencia_almacen }}</span>
+            <!-- Mostrar placeholder cuando no hay imagen -->
+            <div *ngIf="!producto.imagen" class="product-img-placeholder">
+              <i class="fas fa-drumstick-bite"></i>
             </div>
           </div>
 
+          <!-- Información del producto -->
+          <div class="product-info">
+            <!-- Código de barras -->
+            <div class="product-code">
+              <i class="fas fa-barcode"></i> {{ producto.codigo_barras }}
+            </div>
+
+            <h3 class="product-name">{{ producto.nombre_producto }}</h3>
+
+            <div class="product-price">
+              <i class="fas fa-tag"></i> ${{ producto.precio_pieza }}
+            </div>
+
+            <!-- Inventario -->
+            <div class="product-stock">
+              <div class="stock-row">
+                <div class="stock-label">Stock Objetivo:</div>
+                <div class="stock-value">{{ producto.stock_exhibe }}</div>
+              </div>
+              <div class="stock-row">
+                <div class="stock-label">Existencia:</div>
+                <div class="stock-value">{{ producto.existencia_exhibe }}</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Acciones -->
           <div class="d-flex justify-content-end">
             <button class="btn btn-sm btn-info me-2" (click)="abrirModalDetalles(producto, modalDetalles)">
               <i class="fas fa-info-circle"></i>
@@ -422,47 +335,136 @@
         </div>
       </div>
     </div>
-  </div>
-</div>
 
-  <!-- Spinner de carga -->
-  <div class="row justify-content-center my-5" *ngIf="cargando">
-    <div class="col-auto">
-      <div class="loading-spinner">
-        <div class="spinner-border spinner-border-lg" role="status">
-          <span class="visually-hidden">Cargando...</span>
+    <!-- Sección de productos - Vista de lista -->
+    <!-- Sección de productos - Vista de lista -->
+  <div class="product-list" *ngIf="tipoVista === 'list' && !cargando && productos.length > 0">
+    <div class="list-item" *ngFor="let producto of productos">
+      <div class="row g-0">
+        <!-- Imagen del producto -->
+        <div class="col-md-2">
+          <div class="list-item-image">
+            <img
+              *ngIf="producto.imagen"
+              [src]="'http://localhost:3000' + getImageUrl(producto.imagen)"
+              [alt]="producto.nombre_producto"
+              class="img-fluid"
+              onerror="this.src='assets/img/placeholder.png'"
+            />
+            <div *ngIf="!producto.imagen" class="product-img-placeholder">
+              <i class="fas fa-drumstick-bite"></i>
+            </div>
+            <div
+              class="status-badge"
+              [ngClass]="producto.estatus === 'activo' ? 'badge-success' : 'badge-danger'"
+            >
+              <i class="fas" [ngClass]="producto.estatus === 'activo' ? 'fa-check-circle' : 'fa-times-circle'"></i>
+              {{ producto.estatus }}
+            </div>
+          </div>
         </div>
-        <p class="loading-text mt-3">Cargando productos...</p>
+
+        <!-- Información del producto -->
+        <div class="col-md-6">
+          <div class="list-item-info p-3">
+            <div class="d-flex align-items-center mb-2">
+              <span class="product-code me-2">
+                <i class="fas fa-barcode me-1"></i>{{ producto.codigo_barras }}
+              </span>
+            </div>
+
+            <h5 class="list-item-title">{{ producto.nombre_producto }}</h5>
+
+            <div class="mb-2">
+              <span class="badge me-2 bg-light text-dark">
+                <i class="fas fa-tag me-1"></i>{{ producto.marca || 'Sin marca' }}
+              </span>
+              <span class="badge bg-light text-dark">
+                <i class="fas fa-box me-1"></i>{{ producto.tamanio || 'Sin tamaño' }}
+              </span>
+            </div>
+
+            <div class="product-location" *ngIf="producto.pasillo">
+              <i class="fas fa-map-marker-alt me-1"></i>
+              <small>Pasillo: {{ producto.pasillo }}</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Precio y acciones -->
+        <div class="col-md-4">
+          <div class="list-item-actions p-3">
+            <div class="product-price mb-3">
+              <i class="fas fa-tag me-1"></i>$ {{ producto.precio_pieza }}
+            </div>
+
+            <div class="inventory-stats mb-3">
+              <div class="inventory-item d-flex justify-content-between">
+                <span class="inventory-label">Stock:</span>
+                <span class="inventory-value fw-bold">{{ producto.stock_almacen }}</span>
+              </div>
+              <div class="inventory-item d-flex justify-content-between">
+                <span class="inventory-label">Existencia:</span>
+                <span class="inventory-value fw-bold">{{ producto.existencia_almacen }}</span>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-end">
+              <button class="btn btn-sm btn-info me-2" (click)="abrirModalDetalles(producto, modalDetalles)">
+                <i class="fas fa-info-circle"></i>
+              </button>
+              <button class="btn btn-sm btn-warning me-2" (click)="abrirModalEdicion(producto, modalEdicion)">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn btn-sm btn-danger" (click)="abrirModalEliminar(producto, modalProducto)">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Mensaje de error -->
-  <div class="alert alert-custom alert-danger" *ngIf="error">
-    <div class="alert-icon">
-      <i class="fas fa-exclamation-circle"></i>
+    <!-- Spinner de carga -->
+    <div class="row justify-content-center my-5" *ngIf="cargando">
+      <div class="col-auto">
+        <div class="loading-spinner">
+          <div class="spinner-border spinner-border-lg" role="status">
+            <span class="visually-hidden">Cargando...</span>
+          </div>
+          <p class="loading-text mt-3">Cargando productos...</p>
+        </div>
+      </div>
     </div>
-    <div class="alert-content">
-      <h4 class="alert-heading">¡Error al cargar los productos!</h4>
-      <p class="mb-0">{{ error }}</p>
-    </div>
-  </div>
 
-  <!-- Mensaje de no productos -->
-  <div
-    class="empty-state"
-    *ngIf="!cargando && !error && productos.length === 0"
-  >
-    <div class="empty-icon">
-      <i class="fas fa-box-open"></i>
+    <!-- Mensaje de error -->
+    <div class="alert alert-custom alert-danger" *ngIf="error">
+      <div class="alert-icon">
+        <i class="fas fa-exclamation-circle"></i>
+      </div>
+      <div class="alert-content">
+        <h4 class="alert-heading">¡Error al cargar los productos!</h4>
+        <p class="mb-0">{{ error }}</p>
+      </div>
     </div>
-    <h3 class="empty-title">No hay productos en el inventario</h3>
-    <p class="empty-text">
-      Comienza agregando productos nuevos a tu inventario.
-    </p>
-    <button class="btn btn-primary btn-lg mt-3" routerLink="/agregar-producto">
-      <i class="fas fa-plus me-2"></i>Agregar Producto
-    </button>
+
+    <!-- Mensaje de no productos -->
+    <div
+      class="empty-state"
+      *ngIf="!cargando && !error && productos.length === 0"
+    >
+      <div class="empty-icon">
+        <i class="fas fa-box-open"></i>
+      </div>
+      <h3 class="empty-title">No hay productos en el inventario</h3>
+      <p class="empty-text">
+        Comienza agregando productos nuevos a tu inventario.
+      </p>
+      <button class="btn btn-primary btn-lg mt-3" routerLink="/agregar-producto">
+        <i class="fas fa-plus me-2"></i>Agregar Producto
+      </button>
+    </div>
   </div>
 </div>
   <!-- Grid de Productos -->
@@ -998,7 +1000,7 @@
         <div class="row g-3">
           <div class="col-md-6">
             <div class="detail-item">
-              <span class="detail-label">Código de Barras:</span>
+              <i class="fas fa-barcode text-primary"></i>
               <span class="detail-value">{{
                 productoSeleccionado?.codigo_barras
               }}</span>

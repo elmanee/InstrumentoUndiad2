@@ -475,11 +475,15 @@
 }
 
 .badge-success {
-  background-color: #28a745;
+  background: rgba(40, 167, 69, 0.1);
+  color: #28a745;
+  border: 1px solid rgba(40, 167, 69, 0.2);
 }
 
 .badge-danger {
-  background-color: #dc3545;
+  background: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+  border: 1px solid rgba(220, 53, 69, 0.2);
 }
 
 .list-item-info {
@@ -569,8 +573,8 @@
 }
 
 .modal-header {
-  background-color: var(--secondary);
-  color: var(--white);
+  background: linear-gradient(135deg, var(--secondary), var(--primary));
+  color: white;
   padding: 1.5rem;
   border-bottom: none;
 }
@@ -775,3 +779,872 @@
     font-size: 0.9rem;
   }
 }
+.text-primary {
+  color:#d62828;
+}
+/* Estilos estandarizados para el Sistema de Inventario */
+
+
+:root {
+  /* Colores principales */
+  --primary: #d62828;
+  --primary-dark: #b21e1e;
+  --primary-light: #e45a5a;
+  --secondary: #003049;
+  --secondary-light: #004366;
+  --accent: #f77f00;
+  --light: #fcbf49;
+  --lighter: #eae2b7;
+
+  /* Escala de grises */
+  --white: #ffffff;
+  --gray-100: #f8f9fa;
+  --gray-200: #e9ecef;
+  --gray-300: #dee2e6;
+  --gray-400: #ced4da;
+  --gray-500: #adb5bd;
+  --gray-600: #6c757d;
+  --gray-700: #495057;
+  --gray-800: #343a40;
+  --gray-900: #212529;
+
+  /* Colores de estado */
+  --success: #28a745;
+  --success-light: #d4edda;
+  --success-border: #c3e6cb;
+  --danger: #dc3545;
+  --danger-light: #f8d7da;
+  --danger-border: #f5c6cb;
+  --warning: #ffc107;
+  --info: #17a2b8;
+
+  /* Efectos */
+  --shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  --shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+  --transition: all 0.3s ease;
+}
+
+/* Componentes de estado */
+
+/* 1. Status Tag (para tarjetas de producto) */
+.status-tag {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 0.3rem 0.7rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  z-index: 2;
+}
+
+.status-tag-active {
+  background-color: rgba(40, 167, 69, 0.1);
+  color: var(--success);
+  border: 1px solid rgba(40, 167, 69, 0.2);
+}
+
+.status-tag-inactive {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: var(--danger);
+  border: 1px solid rgba(220, 53, 69, 0.2);
+}
+
+/* 2. Status Badge (para lista) */
+.status-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 0.25rem 0.5rem;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: white;
+  text-transform: capitalize;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.status-badge-active {
+  background-color: var(--success);
+}
+
+.status-badge-inactive {
+  background-color: var(--danger);
+}
+
+/* 3. Status Indicator (para indicador pequeño) */
+.status-indicator {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+.status-indicator-active {
+  background-color: var(--success);
+  box-shadow: 0 0 0 2px rgba(40, 167, 69, 0.2);
+}
+
+.status-indicator-inactive {
+  background-color: var(--danger);
+  box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.2);
+}
+
+/* 4. Status Option (para selección en modal) */
+.status-option {
+  border: 2px solid var(--gray-200);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.status-option:hover {
+  border-color: var(--gray-300);
+  background-color: var(--gray-100);
+}
+
+.active-option {
+  border-color: var(--success);
+  background-color: rgba(40, 167, 69, 0.05);
+}
+
+.inactive-option {
+  border-color: var(--danger);
+  background-color: rgba(220, 53, 69, 0.05);
+}
+
+.status-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+}
+
+.active-option .status-icon {
+  background-color: rgba(40, 167, 69, 0.1);
+  color: var(--success);
+}
+
+.inactive-option .status-icon {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: var(--danger);
+}
+
+/* Botones estandarizados */
+
+/* Base para todos los botones */
+.btn {
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: none;
+}
+
+.btn:focus {
+  box-shadow: none;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+/* Botón primario */
+.btn-primary {
+  background-color: var(--primary);
+  color: white;
+  box-shadow: 0 2px 4px rgba(214, 40, 40, 0.2);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-dark);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(214, 40, 40, 0.3);
+}
+
+/* Botón info */
+.btn-info {
+  background-color: var(--info);
+  color: var(--white);
+  box-shadow: 0 2px 4px rgba(23, 162, 184, 0.2);
+}
+
+.btn-info:hover {
+  background-color: #138496;
+  color: var(--white);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(23, 162, 184, 0.3);
+}
+
+/* Botón warning */
+.btn-warning {
+  background-color: var(--warning);
+  color: var(--gray-900);
+  box-shadow: 0 2px 4px rgba(255, 193, 7, 0.2);
+}
+
+.btn-warning:hover {
+  background-color: #e0a800;
+  color: var(--gray-900);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(255, 193, 7, 0.3);
+}
+
+/* Botón danger */
+.btn-danger {
+  background-color: var(--danger);
+  color: white;
+  box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2);
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
+/* Botón secundario outline */
+.btn-outline-secondary {
+  background-color: transparent;
+  border: 1px solid var(--gray-400);
+  color: var(--gray-700);
+}
+
+.btn-outline-secondary:hover {
+  background-color: var(--gray-200);
+  color: var(--gray-800);
+  transform: translateY(-2px);
+}
+
+/* Tamaños de botones */
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+.btn-lg {
+  padding: 0.75rem 1.5rem;
+  font-size: 1.125rem;
+}
+
+/* Tarjetas de productos */
+.product-card {
+  background-color: var(--white);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border: 1px solid var(--gray-200);
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.product-image {
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--gray-100);
+  padding: 1rem;
+}
+
+.product-img {
+  max-height: 140px;
+  max-width: 90%;
+  object-fit: contain;
+}
+
+.product-img-placeholder {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(214, 40, 40, 0.1);
+  border-radius: 50%;
+  font-size: 2rem;
+  color: var(--primary);
+}
+
+.product-info {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.product-code {
+  font-size: 0.85rem;
+  color: var(--gray-600);
+  margin-bottom: 0.5rem;
+}
+
+.product-name {
+  font-weight: 600;
+  color: var(--secondary);
+  margin-bottom: 1rem;
+  height: 48px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.product-price {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 1rem;
+}
+
+.product-stock {
+  background-color: var(--gray-100);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: auto;
+}
+
+.stock-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.stock-label {
+  font-size: 0.85rem;
+  color: var(--gray-600);
+}
+
+.stock-value {
+  font-weight: 600;
+  color: var(--secondary);
+}
+
+.product-actions {
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Lista de productos */
+.product-list {
+  width: 100%;
+}
+
+.list-item {
+  background-color: var(--white);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+  overflow: hidden;
+  transition: var(--transition);
+  border: 1px solid var(--gray-200);
+}
+
+.list-item:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-3px);
+}
+
+.list-item-image {
+  position: relative;
+  height: 100%;
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--gray-100);
+  padding: 10px;
+}
+
+.list-item-info {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.list-item-title {
+  margin-top: 8px;
+  font-weight: 600;
+  color: var(--secondary);
+}
+
+.list-item-actions {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: var(--gray-100);
+  padding: 1rem;
+}
+
+/* Filtros rápidos */
+.filter-pills {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.filter-label {
+  font-weight: 500;
+  color: var(--gray-600);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 1rem;
+  background-color: var(--gray-200);
+  border-radius: 20px;
+  color: var(--gray-700);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.pill:hover {
+  background-color: var(--gray-300);
+}
+
+.pill.active {
+  background-color: var(--primary);
+  color: var(--white);
+}
+
+.pill-count {
+  margin-left: 0.5rem;
+  padding: 0.1rem 0.5rem;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  font-size: 0.75rem;
+}
+
+/* Estado vacío */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  background-color: var(--white);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+}
+
+.empty-icon {
+  font-size: 4rem;
+  color: var(--gray-400);
+  margin-bottom: 1.5rem;
+}
+
+.empty-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--secondary);
+  margin-bottom: 1rem;
+}
+
+.empty-text {
+  color: var(--gray-600);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* Modales */
+.modal-content {
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.modal-header {
+  padding: 1.5rem;
+  border-bottom: none;
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-footer {
+  border-top: none;
+  padding: 1rem 1.5rem 1.5rem;
+}
+
+.modal-tabs {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--gray-200);
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+}
+
+.modal-tabs .nav-link {
+  color: var(--gray-700);
+  padding: 0.75rem 1.5rem;
+  border-radius: 30px;
+  transition: var(--transition);
+}
+
+.modal-tabs .nav-link:hover {
+  color: var(--gray-900);
+  background-color: var(--gray-200);
+}
+
+.modal-tabs .nav-link.active {
+  background-color: var(--primary);
+  color: var(--white);
+}
+
+/* Resumen del producto */
+.product-summary {
+  display: flex;
+  align-items: center;
+  background-color: var(--gray-100);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.product-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-right: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  box-shadow: var(--shadow);
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(214, 40, 40, 0.1);
+  font-size: 2rem;
+  color: var(--primary);
+}
+
+.product-details h4 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--secondary);
+  margin-bottom: 0.5rem;
+}
+
+.product-details p {
+  font-size: 0.9rem;
+  color: var(--gray-600);
+  margin-bottom: 0.25rem;
+}
+
+/* Alertas */
+.alert {
+  display: flex;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid transparent;
+}
+
+.alert-danger {
+  background-color: var(--danger-light);
+  color: var(--danger);
+  border-color: var(--danger-border);
+}
+
+.alert-info {
+  background-color: #d1ecf1;
+  color: #0c5460;
+  border-color: #bee5eb;
+}
+
+.alert-icon {
+  display: flex;
+  align-items: flex-start;
+  font-size: 1.25rem;
+  margin-right: 1rem;
+}
+
+.alert-content {
+  flex: 1;
+}
+
+/* Acciones del modal */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+/* Estilos específicos para modales estandarizados */
+
+/* Encabezado de modal */
+.modal-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: none;
+}
+
+.modal-header.bg-primary {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark)) !important;
+}
+
+.modal-header.bg-secondary {
+  background: linear-gradient(135deg, var(--secondary), var(--secondary-light)) !important;
+}
+
+/* Cuerpo de modal */
+.modal-body {
+  padding: 1.5rem;
+}
+
+/* Pie de modal */
+.modal-footer {
+  border-top: none;
+  padding: 1rem 1.5rem 1.5rem;
+}
+
+/* Componentes específicos para el modal de edición */
+.price-display {
+  padding: 0.75rem 1rem;
+  background-color: var(--gray-100);
+  border-radius: 8px;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.currency-symbol {
+  color: var(--gray-600);
+  margin-right: 0.25rem;
+}
+
+/* Secciones del modal de detalles */
+.product-detail-img {
+  max-height: 200px;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: var(--shadow-sm);
+}
+
+.section-title {
+  color: var(--secondary);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.card-header.bg-light {
+  background-color: var(--gray-100) !important;
+  border-bottom: none;
+}
+
+/* Estadísticas de inventario */
+.inventory-stat {
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: white;
+  height: 100%;
+}
+
+.inventory-warning .stat-value {
+  color: var(--danger);
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: var(--gray-600);
+  margin-bottom: 0.5rem;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--secondary);
+  margin-bottom: 0.25rem;
+}
+
+.stat-desc {
+  font-size: 0.8rem;
+  color: var(--gray-500);
+}
+
+/* Pestañas dentro del modal */
+.modal-tabs .nav-link {
+  border-radius: 30px;
+  padding: 0.75rem 1.25rem;
+  transition: var(--transition);
+  font-weight: 500;
+}
+
+.modal-tabs .nav-link:not(.active):hover {
+  background-color: var(--gray-200);
+}
+
+.modal-tabs .nav-link.active {
+  background-color: var(--primary);
+  color: white;
+  box-shadow: 0 4px 8px rgba(214, 40, 40, 0.2);
+}
+
+/* Resumen del producto */
+.product-summary {
+  display: flex;
+  align-items: center;
+  background-color: var(--gray-100);
+  border-radius: 10px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.product-avatar {
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-right: 1.25rem;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.product-avatar img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(214, 40, 40, 0.1);
+  color: var(--primary);
+  font-size: 2rem;
+}
+
+.product-details {
+  flex: 1;
+}
+
+.product-details h4 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--secondary);
+  margin-bottom: 0.5rem;
+}
+
+/* Detalles del producto */
+.detail-section .card {
+  transition: var(--transition);
+}
+
+.detail-section .card:hover {
+  box-shadow: var(--shadow);
+}
+
+.detail-item {
+  margin-bottom: 1rem;
+}
+
+.detail-label {
+  font-weight: 500;
+  color: var(--gray-600);
+}
+
+.detail-value {
+  font-weight: 500;
+  color: var(--gray-800);
+}
+
+/* Formularios */
+.form-label {
+  font-weight: 500;
+}
+
+.form-control, .input-group-text {
+  border-color: var(--gray-300);
+}
+
+.form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 0.2rem rgba(214, 40, 40, 0.25);
+}
+
+.input-group-text {
+  background-color: var(--gray-100);
+  color: var(--gray-700);
+}
+
+/* Acciones del modal */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  .product-summary {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .product-avatar {
+    margin-right: 0;
+    margin-bottom: 1rem;
+  }
+
+  .modal-tabs {
+    flex-wrap: wrap;
+  }
+
+  .modal-tabs .nav-item {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+}
+
+
