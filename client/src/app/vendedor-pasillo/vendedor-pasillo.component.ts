@@ -1,25 +1,25 @@
-import { Component, OnInit } from "@angular/core";
-import { ProductoService } from "../services/prodcuto-service.service";
-import { NotificacionService } from "../services/notificacion-service.service";
-import { Producto } from "../models/Producto";
-import { Modal } from "bootstrap";
-import { Observable, of, throwError } from "rxjs";
-import { catchError, finalize, map } from "rxjs/operators";
+import { Component, OnInit } from '@angular/core';
+import { ProductoService } from '../services/prodcuto-service.service';
+import { NotificacionService } from '../services/notificacion-service.service';
+import { Producto } from '../models/Producto';
+import { Modal } from 'bootstrap';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, finalize, map } from 'rxjs/operators';
 
 @Component({
-  selector: "app-vendedor-pasillo",
+  selector: 'app-vendedor-pasillo',
   standalone: false,
-  templateUrl: "./vendedor-pasillo.component.html",
-  styleUrl: "./vendedor-pasillo.component.css",
+  templateUrl: './vendedor-pasillo.component.html',
+  styleUrl: './vendedor-pasillo.component.css',
 })
 export class VendedorPasilloComponent implements OnInit {
   productos: Producto[] = [];
   productosFiltrados: Producto[] = [];
   productoSeleccionado: Producto | null = null;
-  allProductos: Producto[] = []; // Original, unfiltered products
+  allProductos: Producto[] = [];
 
-  searchTerm: string = "";
-  filtroEstatus: string = "todos";
+  searchTerm: string = '';
+  filtroEstatus: string = 'todos';
 
   // Paginación
   currentPage: number = 1;
@@ -27,7 +27,7 @@ export class VendedorPasilloComponent implements OnInit {
   totalPages: number = 1;
   pages: number[] = [];
 
-  searchType: string = "nombre";
+  searchType: string = 'nombre';
   precioMin: number = 0;
   precioMax: number = 1000;
   cargando: boolean = false;
@@ -36,7 +36,7 @@ export class VendedorPasilloComponent implements OnInit {
 
   constructor(
     private productoService: ProductoService,
-    private notificacionService: NotificacionService,
+    private notificacionService: NotificacionService
   ) {}
 
   ngOnInit(): void {
@@ -52,9 +52,9 @@ export class VendedorPasilloComponent implements OnInit {
         this.calcularPaginacion();
       },
       error: (err) => {
-        console.error("Error al cargar productos:", err);
+        console.error('Error al cargar productos:', err);
         this.notificacionService.mostrarError(
-          "No se pudieron cargar los productos. Por favor, intente de nuevo más tarde.",
+          'No se pudieron cargar los productos. Por favor, intente de nuevo más tarde.'
         );
       },
     });
@@ -62,9 +62,12 @@ export class VendedorPasilloComponent implements OnInit {
 
   // Filtros y búsqueda
   aplicarFiltrosYBusqueda(): void {
-    // Filtrar por estatus
+    console.log('Aplicando filtros a:', this.productos); // Depuración
+
+    // Crear una copia para no modificar el original
     let productosFiltrados = [...this.productos];
 
+    // Filtrar por estatus
     if (this.filtroEstatus === "activo") {
       productosFiltrados = productosFiltrados.filter((p) =>
         p.estatus === "activo"
@@ -75,15 +78,7 @@ export class VendedorPasilloComponent implements OnInit {
       );
     }
 
-    // Búsqueda por término
-    if (this.searchTerm.trim() !== "") {
-      const termino = this.searchTerm.toLowerCase().trim();
-      productosFiltrados = productosFiltrados.filter((p) =>
-        (p.nombre_producto?.toLowerCase() || "").includes(termino) ||
-        (String(p.codigo_barras).toLowerCase() || "").includes(termino)
-      );
-    }
-
+    console.log('Productos filtrados:', productosFiltrados); // Depuración
     this.productosFiltrados = productosFiltrados;
     this.calcularPaginacion();
   }
@@ -91,7 +86,7 @@ export class VendedorPasilloComponent implements OnInit {
   // Paginación
   calcularPaginacion(): void {
     this.totalPages = Math.ceil(
-      this.productosFiltrados.length / this.itemsPerPage,
+      this.productosFiltrados.length / this.itemsPerPage
     );
     this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
 
@@ -105,7 +100,7 @@ export class VendedorPasilloComponent implements OnInit {
     const endIndex = startIndex + this.itemsPerPage;
     this.productosFiltrados = this.productosFiltrados.slice(
       startIndex,
-      endIndex,
+      endIndex
     );
   }
 
@@ -121,7 +116,7 @@ export class VendedorPasilloComponent implements OnInit {
     this.productoSeleccionado = { ...producto }; // Crear copia para no modificar directo
 
     // Inicializar el modal
-    const modalElement = document.getElementById("editarProductoModal");
+    const modalElement = document.getElementById('editarProductoModal');
     if (modalElement) {
       this.modalEdicion = new Modal(modalElement);
       this.modalEdicion.show();
@@ -138,7 +133,7 @@ export class VendedorPasilloComponent implements OnInit {
         this.productoSeleccionado.cantidad_rellenar < 0
       ) {
         this.notificacionService.mostrarError(
-          "Los valores no pueden ser negativos",
+          'Los valores no pueden ser negativos'
         );
         return;
       }
@@ -146,24 +141,26 @@ export class VendedorPasilloComponent implements OnInit {
       // Additional validation for transfer quantity
       if (
         this.productoSeleccionado.cantidad_rellenar >
-          this.productoSeleccionado.existencia_almacen
+        this.productoSeleccionado.existencia_almacen
       ) {
         this.notificacionService.mostrarError(
-          "No hay suficiente existencia en almacén",
+          'No hay suficiente existencia en almacén'
         );
         return;
       }
 
-      this.productoService.actualizarProducto(this.productoSeleccionado)
+      this.productoService
+        .actualizarProducto(this.productoSeleccionado)
         .subscribe({
           next: (response) => {
             this.notificacionService.mostrarExito(
-              "Producto actualizado exitosamente",
+              'Producto actualizado exitosamente'
             );
 
             // Update the product in the local list
-            const index = this.productos.findIndex((p) =>
-              p.codigo_barras === response.producto_actualizado.codigo_barras
+            const index = this.productos.findIndex(
+              (p) =>
+                p.codigo_barras === response.producto_actualizado.codigo_barras
             );
             if (index !== -1) {
               this.productos[index] = response.producto_actualizado;
@@ -176,9 +173,9 @@ export class VendedorPasilloComponent implements OnInit {
             }
           },
           error: (err) => {
-            console.error("Error al actualizar producto:", err);
+            console.error('Error al actualizar producto:', err);
             this.notificacionService.mostrarError(
-              "No se pudo actualizar el producto. Intente nuevamente.",
+              'No se pudo actualizar el producto. Intente nuevamente.'
             );
           },
         });
@@ -188,69 +185,69 @@ export class VendedorPasilloComponent implements OnInit {
   verDetalles(producto: Producto): void {
     // Implementar lógica para mostrar detalles del producto
     // Podría ser otro modal o navegar a una página de detalles
-    console.log("Ver detalles del producto:", producto);
+    console.log('Ver detalles del producto:', producto);
   }
 
   getImageUrl(imagePath: string): string {
     // If the path already starts with '/', return as is
-    if (imagePath && imagePath.startsWith("/")) {
+    if (imagePath && imagePath.startsWith('/')) {
       return imagePath;
     }
     // Otherwise, ensure it has a leading slash
-    return imagePath ? `/${imagePath}` : "";
+    return imagePath ? `/${imagePath}` : '';
   }
 
   // Manejador para errores de carga de imágenes
   onImageError(event: any): void {
-    event.target.src = "assets/images/producto-default.jpg";
+    event.target.src = 'assets/images/producto-default.jpg';
   }
 
   getPlaceholderText(): string {
     switch (this.searchType) {
-      case "nombre":
-        return "Buscar por nombre...";
-      case "codigo":
-        return "Ingrese código de barras...";
-      case "marca":
-        return "Buscar por marca...";
-      case "tamanio":
-        return "Buscar por tamaño...";
-      case "pasillo":
-        return "Buscar por pasillo...";
+      case 'nombre':
+        return 'Buscar por nombre...';
+      case 'codigo':
+        return 'Ingrese código de barras...';
+      case 'marca':
+        return 'Buscar por marca...';
+      case 'tamanio':
+        return 'Buscar por tamaño...';
+      case 'pasillo':
+        return 'Buscar por pasillo...';
       default:
-        return "Buscar producto...";
+        return 'Buscar producto...';
     }
   }
 
   buscarProductos(): void {
-    // If search term is empty and not searching by price, reset to all products
-    if (!this.searchTerm && this.searchType !== "precio") {
+    // si el campo busqueda esta vacio y no se busca se reinica o restableme todos los porductos
+    if (!this.searchTerm && this.searchType !== 'precio') {
       this.cargarProductos();
       return;
     }
 
-    // Price validation
-    if (this.searchType === "precio") {
-      // Check for invalid numeric values
+    // validacion de precio
+    if (this.searchType === 'precio') {
+      // revisa numero invalidos
       if (isNaN(this.precioMin) || isNaN(this.precioMax)) {
         this.notificacionService.mostrarAdvertencia(
-          "Ingrese valores numéricos válidos para el rango de precios",
+          'Ingrese valores numéricos válidos para el rango de precios'
         );
         return;
       }
 
-      // Validate price range relationship
+      // valida el precio en el rango
       if (this.precioMin < 0 || this.precioMax < 0) {
         this.notificacionService.mostrarAdvertencia(
-          "Los precios no pueden ser negativos",
+          'Los precios no pueden ser negativos'
         );
         return;
       }
 
-      // Ensure minimum price is less than maximum price
+      // verifica si el precio min es mayor al maximo
       if (this.precioMin >= this.precioMax) {
         this.notificacionService.mostrarAdvertencia(
-          "El precio mínimo debe ser menor que el precio máximo",
+          'El precio mínimo debe ser menor que el precio máximo'
         );
         return;
       }
@@ -260,99 +257,107 @@ export class VendedorPasilloComponent implements OnInit {
     let searchObservable: Observable<any>;
 
     switch (this.searchType) {
-      case "nombre":
+      case 'nombre':
         searchObservable = this.productoService.obtenerProductosPorNombre(
-          this.searchTerm,
+          this.searchTerm
         );
         break;
-      case "codigo":
-        searchObservable = this.productoService.obtenerProductoPorCodigo(
-          this.searchTerm,
-        ).pipe(
-          map((producto) => [producto]),
-          catchError((error) => {
-            if (error.status === 404) {
-              return of([]);
-            }
-            return throwError(() => error);
-          }),
-        );
+      case 'codigo':
+        searchObservable = this.productoService
+          .obtenerProductoPorCodigo(this.searchTerm)
+          .pipe(
+            map((producto) => [producto]),
+            catchError((error) => {
+              if (error.status === 404) {
+                return of([]);
+              }
+              return throwError(() => error);
+            })
+          );
         break;
-      case "marca":
+      case 'marca':
+        console.log('Buscando marca:', this.searchTerm.trim());
         searchObservable = this.productoService.obtenerProductosPorMarca(
-          this.searchTerm,
+          this.searchTerm.trim()
         );
         break;
-      case "tamanio":
+      case 'tamanio':
         searchObservable = this.productoService.obtenerProductosPorTamanio(
-          this.searchTerm,
+          this.searchTerm.trim()
         );
         break;
-      case "pasillo":
-        // Validate aisle input
-        if (!this.searchTerm || this.searchTerm.trim() === "") {
+      case 'pasillo':
+        // valida pasillo entrada
+        if (!this.searchTerm || this.searchTerm.trim() === '') {
           this.notificacionService.mostrarAdvertencia(
-            "Ingrese un número o nombre de pasillo válido",
+            'Ingrese un número o nombre de pasillo válido'
           );
           this.cargando = false;
           return;
         }
 
-        // Optional: convert to numeric if it's a number
+        //comvierte a numero
         const pasilloTerm = !isNaN(Number(this.searchTerm))
           ? this.searchTerm.trim()
           : this.searchTerm.trim();
 
-        searchObservable = this.productoService.obtenerProductosPorPasillo(
-          pasilloTerm,
-        );
+        searchObservable =
+          this.productoService.obtenerProductosPorPasillo(pasilloTerm);
         break;
-      case "precio":
+      case 'precio':
         searchObservable = this.productoService.obtenerProductosPorPrecio(
           this.precioMin,
-          this.precioMax,
+          this.precioMax
         );
         break;
       default:
-        // If no valid search type, reload all products
+        // si no es valida carga todos los prodcuctos
         this.cargarProductos();
         return;
     }
 
     searchObservable.pipe(
-      finalize(() => this.cargando = false),
+      finalize(() => this.cargando = false)
     ).subscribe({
       next: (productos) => {
-        if (productos.length === 0) {
-          // If no results, show message but keep displaying previous products
+        console.log('Productos recibidos:', productos); // Depuración
+
+        if (!productos || productos.length === 0) {
           this.notificacionService.mostrarInfo(
-            "No se encontraron productos con los criterios de búsqueda",
+            "No se encontraron productos con los criterios de búsqueda"
           );
+          // Mantener los productos actuales en lugar de borrarlos
         } else {
-          // Update products list with search results
-          this.productos = productos;
+          // Asignar los productos recibidos
+          this.productos = [...productos];
+
+          // Aplicar filtros adicionales (como estado activo/inactivo)
           this.aplicarFiltrosYBusqueda();
+
+          // Mensaje de éxito
+          this.notificacionService.mostrarExito(
+            `Se encontraron ${productos.length} productos`
+          );
         }
       },
       error: (err) => {
-        console.error("Error al buscar productos:", err);
+        console.error(`Error al buscar productos por ${this.searchType}:`, err);
         this.notificacionService.mostrarError(
-          "Error al buscar productos. Intente nuevamente.",
+          `Error al buscar productos. Intente nuevamente.`
         );
-        // On error, maintain the current product display
-      },
+      }
     });
   }
 
   onSearchTermChange(): void {
-    // If search term is emptied, reload all products
+    // si el ternimo de buscaqueda esta vacio recargamos los productos
     if (!this.searchTerm.trim()) {
       this.cargarProductos();
     }
   }
 
   onPriceInputChange(): void {
-    // Reset to all products if both price fields are emptied
+    // carga todos los procutos ti los campos de precio estan vacios
     if (
       (this.precioMin === 0 || this.precioMin === null) &&
       (this.precioMax === 0 || this.precioMax === null)
@@ -362,8 +367,10 @@ export class VendedorPasilloComponent implements OnInit {
   }
 
   resetFilters(): void {
-    // Reset to original data without API call
+    // restablce los datos originales sin llamdar a la API
     this.productos = [...this.allProductos];
+    this.searchTerm = '';
+    this.searchType = 'nombre';
     this.aplicarFiltrosYBusqueda();
   }
 }

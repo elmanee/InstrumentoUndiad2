@@ -1,28 +1,53 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ClienteService, Producto, ProductoResponse } from '../services/cliente-service.service';
+import {
+  ClienteService,
+  Producto,
+  ProductoResponse,
+} from '../services/cliente-service.service';
 import { Subject, Subscription } from 'rxjs';
-import { debounceTime, switchMap, catchError, takeUntil, finalize } from 'rxjs/operators';
+import {
+  debounceTime,
+  switchMap,
+  catchError,
+  takeUntil,
+  finalize,
+} from 'rxjs/operators';
 import { of } from 'rxjs';
 import { environmentDos } from '../../environments/environment';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { obtenerProductosActivos } from '../../../../server/src/controllers/clienteControllers';
 declare var bootstrap: any;
 
+
+interface FiltrosProducto {
+  tamano: string;
+  marca: string;
+  pasillo: string;
+  codigoBarras: string;
+  nombreProducto: string;
+}
+
+
 @Component({
   selector: 'app-productos',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule
-  ],
+  imports: [CommonModule, FormsModule],
   templateUrl: './productos.component.html',
-  styleUrls: ['./productos.component.css']
+  styleUrls: ['./productos.component.css'],
 })
 export class ProductosComponent implements OnInit {
   // Variables de entorno
   apiUrl = 'http://localhost:3000'; // Puedes cambiar esto por environment.apiUrl si lo tienes configurado
+
+  filtros: FiltrosProducto = {
+    tamano: '',
+    marca: '',
+    pasillo: '',
+    codigoBarras: '',
+    nombreProducto: ''
+  };
 
   // Variables para productos
   productos: Producto[] = [];
@@ -44,9 +69,10 @@ export class ProductosComponent implements OnInit {
   precioMax = 2000;
 
   // Listas para opciones de filtros
-  marcas: string[] = [];
+  marcasDisponibles: string[] = [];
   pasillos: string[] = [];
   tamanios: string[] = [];
+  tamanosDisponibles: string[] = [];
 
   // Variables para paginación
   paginaActual = 1;
@@ -60,7 +86,7 @@ export class ProductosComponent implements OnInit {
   // Modal
   modalDetalle: any;
 
-  constructor(private clienteService: ClienteService) { }
+  constructor(private clienteService: ClienteService) {}
 
   ngOnInit(): void {
     this.cargarProductos();
@@ -72,14 +98,13 @@ export class ProductosComponent implements OnInit {
     }, 500);
   }
 
-  /**
-   * Carga los productos desde el servicio
-   */
+
   cargarProductos(): void {
     this.cargando = true;
     this.errorCarga = false;
 
-    this.clienteService.obtenerProductosActivos()
+    this.clienteService
+      .obtenerProductosActivos()
       .pipe(
         finalize(() => {
           this.cargando = false;
@@ -98,46 +123,31 @@ export class ProductosComponent implements OnInit {
           this.errorCarga = true;
           this.mensajeError = 'Error al cargar productos. Intente nuevamente.';
           console.error('Error cargando productos', error);
-        }
+        },
       });
   }
 
-  /**
-   * Extrae valores únicos de las propiedades para los filtros
-   */
   obtenerValoresUnicos(): void {
-    // Obtener marcas únicas (filtrando valores undefined)
-    this.marcas = [...new Set(this.productos
-      .filter(producto => producto.marca)
-      .map(producto => producto.marca))]
-      .filter((marca): marca is string => marca !== undefined)
-      .sort();
+    // Existing code for marcas and pasillos...
 
-    // Obtener pasillos únicos (filtrando valores undefined)
-    this.pasillos = [...new Set(this.productos
-      .filter(producto => producto.pasillo)
-      .map(producto => producto.pasillo))]
-      .filter((pasillo): pasillo is string => pasillo !== undefined)
-      .sort();
-
-    // Obtener tamaños únicos (filtrando valores undefined)
-    this.tamanios = [...new Set(this.productos
-      .filter(producto => producto.tamanio)
-      .map(producto => producto.tamanio))]
+    this.tamanios = [
+      ...new Set(
+        this.productos
+          .filter((producto) => producto.tamanio)
+          .map((producto) => producto.tamanio)
+      ),
+    ]
       .filter((tamanio): tamanio is string => tamanio !== undefined)
       .sort();
+
+    // Copy to tamanosDisponibles
+    this.tamanosDisponibles = [...this.tamanios];
   }
 
-  /**
-   * Cambia la visibilidad del panel de filtros
-   */
   toggleFiltros(): void {
     this.mostrarFiltros = !this.mostrarFiltros;
   }
 
-  /**
-   * Filtra productos por nombre
-   */
   buscarPorNombre(): void {
     if (!this.nombreBusqueda) {
       this.limpiarFiltros();
@@ -145,7 +155,8 @@ export class ProductosComponent implements OnInit {
     }
 
     this.cargando = true;
-    this.clienteService.obtenerProductosPorNombre(this.nombreBusqueda)
+    this.clienteService
+      .obtenerProductosPorNombre(this.nombreBusqueda)
       .pipe(
         finalize(() => {
           this.cargando = false;
@@ -158,26 +169,25 @@ export class ProductosComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error buscando por nombre', error);
-          // Fallback a búsqueda local si la API falla
-          this.productosFiltrados = this.productos.filter(producto =>
-            producto.nombre_producto.toLowerCase().includes(this.nombreBusqueda.toLowerCase())
+          this.productosFiltrados = this.productos.filter((producto) =>
+            producto.nombre_producto
+              .toLowerCase()
+              .includes(this.nombreBusqueda.toLowerCase())
           );
           this.resetearPaginacion();
-        }
+        },
       });
   }
 
-  /**
-   * Filtra productos por código de barras
-   */
   buscarPorCodigo(): void {
-    if (!this.codigoBusqueda) {
+    if (!this.filtros.codigoBarras) {
       this.limpiarFiltros();
       return;
     }
 
     this.cargando = true;
-    this.clienteService.getProductByCodigo(this.codigoBusqueda)
+    this.clienteService
+      .getProductByCodigo(this.filtros.codigoBarras)
       .pipe(
         finalize(() => {
           this.cargando = false;
@@ -185,23 +195,26 @@ export class ProductosComponent implements OnInit {
       )
       .subscribe({
         next: (response: ProductoResponse) => {
-          this.productosFiltrados = response.lista;
-          this.resetearPaginacion();
+          if (response && response.lista) {
+            this.productosFiltrados = response.lista;
+            this.resetearPaginacion();
+          } else {
+            console.error('Formato de respuesta inesperado:', response);
+            // Use the existing method
+            this.aplicarFiltros();
+          }
         },
         error: (error) => {
           console.error('Error buscando por código', error);
           // Fallback a búsqueda local
-          this.productosFiltrados = this.productos.filter(producto =>
-            producto.codigo_barras.includes(this.codigoBusqueda)
+          this.productosFiltrados = this.productos.filter((producto) =>
+            producto.codigo_barras.includes(this.filtros.codigoBarras)
           );
           this.resetearPaginacion();
-        }
+        },
       });
   }
 
-  /**
-   * Filtra productos por marca
-   */
   filtrarPorMarca(): void {
     if (!this.marcaSeleccionada) {
       this.limpiarFiltros();
@@ -209,7 +222,8 @@ export class ProductosComponent implements OnInit {
     }
 
     this.cargando = true;
-    this.clienteService.obtenerProductosPorMarca(this.marcaSeleccionada)
+    this.clienteService
+      .obtenerProductosPorMarca(this.marcaSeleccionada)
       .pipe(
         finalize(() => {
           this.cargando = false;
@@ -224,13 +238,11 @@ export class ProductosComponent implements OnInit {
           console.error('Error filtrando por marca', error);
           // Fallback a filtrado local
           this.aplicarFiltros();
-        }
+        },
       });
   }
 
-  /**
-   * Actualiza el rango de precios y garantiza valores coherentes
-   */
+
   actualizarRangoPrecio(): void {
     // Asegurar que el precio mínimo nunca sea mayor que el máximo
     if (this.precioMin > this.precioMax) {
@@ -238,12 +250,10 @@ export class ProductosComponent implements OnInit {
     }
   }
 
-  /**
-   * Aplica filtros de precio usando la API
-   */
   filtrarPorPrecio(): void {
     this.cargando = true;
-    this.clienteService.obtenerProductosPorPrecio(this.precioMin, this.precioMax)
+    this.clienteService
+      .obtenerProductosPorPrecio(this.precioMin, this.precioMax)
       .pipe(
         finalize(() => {
           this.cargando = false;
@@ -258,60 +268,123 @@ export class ProductosComponent implements OnInit {
           console.error('Error filtrando por precio', error);
           // Fallback a filtrado local
           this.aplicarFiltros();
-        }
+        },
       });
   }
 
-  /**
-   * Aplica todos los filtros activos (búsqueda local)
-   */
+  filtrarPorTamanio(): void {
+    if (!this.filtros.tamano) {
+      this.limpiarFiltros();
+      return;
+    }
+
+    this.cargando = true;
+    this.clienteService
+      .obtenerProductosPorTamanio(this.filtros.tamano)
+      .pipe(
+        finalize(() => {
+          this.cargando = false;
+        })
+      )
+      .subscribe({
+        next: (response: ProductoResponse) => {
+          this.productosFiltrados = response.lista;
+          this.resetearPaginacion();
+        },
+        error: (error) => {
+          console.error('Error filtrando por tamaño', error);
+          // Fallback a filtrado local
+          this.productosFiltrados = this.productos.filter(
+            (producto) => producto.tamanio === this.filtros.tamano
+          );
+          this.resetearPaginacion();
+        },
+      });
+  }
+
   aplicarFiltros(): void {
-    this.productosFiltrados = this.productos.filter(producto => {
+    // Si hay filtro específico de tamaño, usamos ese método
+    if (this.filtros.tamano) {
+      this.filtrarPorTamanio();
+      return;
+    }
+
+    if (this.filtros.marca) {
+      this.filtrarPorMarca();
+      return;
+    }
+
+    if (this.precioMin > 0 || this.precioMax < 2000) {
+      this.filtrarPorPrecio();
+      return;
+    }
+
+    // Aplicar filtros localmente
+    this.productosFiltrados = this.productos.filter((producto) => {
       // Filtrar por nombre si hay término de búsqueda
-      const nombreMatch = !this.nombreBusqueda ||
-        producto.nombre_producto.toLowerCase().includes(this.nombreBusqueda.toLowerCase());
+      const nombreMatch =
+        !this.filtros.nombreProducto ||
+        producto.nombre_producto
+          .toLowerCase()
+          .includes(this.filtros.nombreProducto.toLowerCase());
 
       // Filtrar por código si hay término de búsqueda
-      const codigoMatch = !this.codigoBusqueda ||
-        producto.codigo_barras.includes(this.codigoBusqueda);
+      const codigoMatch =
+        !this.filtros.codigoBarras ||
+        producto.codigo_barras.includes(this.filtros.codigoBarras);
 
       // Filtrar por marca seleccionada
-      const marcaMatch = !this.marcaSeleccionada ||
-        producto.marca === this.marcaSeleccionada;
+      const marcaMatch =
+        !this.filtros.marca || producto.marca === this.filtros.marca;
 
       // Filtrar por pasillo seleccionado
-      const pasilloMatch = !this.pasilloSeleccionado ||
-        (producto.pasillo && producto.pasillo === this.pasilloSeleccionado);
+      const pasilloMatch =
+        !this.filtros.pasillo ||
+        (producto.pasillo && producto.pasillo === this.filtros.pasillo);
+
+      // Filtrar por tamaño seleccionado
+      const tamanioMatch =
+        !this.filtros.tamano || producto.tamanio === this.filtros.tamano;
 
       // Filtrar por rango de precio
       // Usamos el precio_pieza si existe, si no, usamos precio_kg
-      const precio = producto.precio_pieza > 0 ? producto.precio_pieza :
-                    (producto.precio_kg > 0 ? producto.precio_kg : 0);
+      const precio =
+        producto.precio_pieza > 0
+          ? producto.precio_pieza
+          : producto.precio_kg > 0
+          ? producto.precio_kg
+          : 0;
 
       const precioMatch = precio >= this.precioMin && precio <= this.precioMax;
 
       // Todos los filtros deben coincidir
-      return nombreMatch && codigoMatch && marcaMatch && pasilloMatch && precioMatch;
+      return (
+        nombreMatch && codigoMatch && marcaMatch && pasilloMatch &&
+        tamanioMatch && precioMatch
+      );
     });
 
     this.resetearPaginacion();
   }
 
-  /**
-   * Limpia todos los filtros aplicados
-   */
+  limpiarTodosLosFiltros(): void {
+    this.limpiarFiltros();
+  }
+
   limpiarFiltros(): void {
-    this.nombreBusqueda = '';
-    this.codigoBusqueda = '';
-    this.marcaSeleccionada = '';
-    this.pasilloSeleccionado = '';
+    this.filtros = {
+      tamano: '',
+      codigoBarras: '',
+      nombreProducto: '',
+      marca: '',
+      pasillo: ''
+    };
+
     this.precioMin = 0;
     this.precioMax = 2000;
 
-    this.cargarProductos(); // Recargar todos los productos desde la API
+    this.cargarProductos();
   }
-
-  // El resto de los métodos permanece igual que en el código que te proporcioné anteriormente
 
   cambiarVista(tipo: string): void {
     this.tipoVista = tipo;
@@ -322,14 +395,11 @@ export class ProductosComponent implements OnInit {
     this.cantidad = 1;
 
     setTimeout(() => {
-      // Try to get the modal element
       const modalElement = document.getElementById('detalleProductoModal');
 
-      // Check if modal instance already exists
       if (this.modalDetalle) {
         this.modalDetalle.show();
       }
-      // If not, create a new modal instance
       else if (modalElement) {
         this.modalDetalle = new bootstrap.Modal(modalElement);
         this.modalDetalle.show();
@@ -352,7 +422,9 @@ export class ProductosComponent implements OnInit {
   }
 
   calcularTotalPaginas(): void {
-    this.totalPaginas = Math.ceil(this.productosFiltrados.length / this.elementosPorPagina);
+    this.totalPaginas = Math.ceil(
+      this.productosFiltrados.length / this.elementosPorPagina
+    );
   }
 
   cambiarPagina(pagina: number): void {
@@ -370,7 +442,10 @@ export class ProductosComponent implements OnInit {
     const paginas: number[] = [];
     const maxPaginasMostradas = 5;
 
-    let inicio = Math.max(1, this.paginaActual - Math.floor(maxPaginasMostradas / 2));
+    let inicio = Math.max(
+      1,
+      this.paginaActual - Math.floor(maxPaginasMostradas / 2)
+    );
     let fin = Math.min(this.totalPaginas, inicio + maxPaginasMostradas - 1);
 
     if (fin - inicio + 1 < maxPaginasMostradas) {
@@ -390,36 +465,30 @@ export class ProductosComponent implements OnInit {
     return this.productosFiltrados.slice(inicio, fin);
   }
 
-  /**
- * Método general para filtrar productos basado en los filtros actuales
- */
-filtrarProductos(): void {
-  // Si hay una marca seleccionada, usar la API para filtrar
-  if (this.marcaSeleccionada) {
-    this.filtrarPorMarca();
-    return;
+
+  filtrarProductos(): void {
+    if (this.marcaSeleccionada) {
+      this.filtrarPorMarca();
+      return;
+    }
+
+    if (this.precioMin > 0 || this.precioMax < 2000) {
+      this.filtrarPorPrecio();
+      return;
+    }
+
+    this.aplicarFiltros();
   }
 
-  // Si hay un rango de precios diferente del predeterminado, usar API de precios
-  if (this.precioMin > 0 || this.precioMax < 2000) {
-    this.filtrarPorPrecio();
-    return;
+  searchTerm: string = '';
+
+  buscarProductos(): void {
+    if (!this.searchTerm.trim()) {
+      this.limpiarFiltros();
+      return;
+    }
+
+    this.nombreBusqueda = this.searchTerm.trim();
+    this.buscarPorNombre();
   }
-
-  // Si no hay filtros específicos, aplicar búsqueda local
-  this.aplicarFiltros();
-}
-searchTerm: string = '';
-
-// Add this method
-buscarProductos(): void {
-  if (!this.searchTerm.trim()) {
-    this.limpiarFiltros();
-    return;
-  }
-
-  this.nombreBusqueda = this.searchTerm.trim();
-  this.buscarPorNombre();
-}
-
 }

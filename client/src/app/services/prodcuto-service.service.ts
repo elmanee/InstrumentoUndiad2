@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError, of } from 'rxjs';
-import { catchError, retry, map } from 'rxjs/operators';
+import { catchError, retry, map, tap } from 'rxjs/operators';
 import { Producto } from '../models/Producto';
 
 @Injectable({
@@ -35,14 +35,23 @@ export class ProductoService {
   }
 
   obtenerProductosPorMarca(marca: string): Observable<Producto[]> {
+    // Verificar que la URL sea correcta
     return this.http.get<Producto[]>(`${this.apiUrl}/obtener_producto/marca/${marca}`)
       .pipe(
-        catchError(this.handleError)
+        // Añadir console.log para depuración
+        tap(response => console.log('Respuesta de búsqueda por marca:', response)),
+        catchError(error => {
+          console.error('Error en búsqueda por marca:', error);
+          if (error.status === 404) {
+            return of([]);
+          }
+          return this.handleError(error);
+        })
       );
   }
 
   obtenerProductosPorTamanio(tamanio: string): Observable<Producto[]> {
-    return this.http.get<Producto[]>(`${this.apiUrl}/obtener_producto/tamanio/${tamanio}`)
+    return this.http.get<any>(`${this.apiUrl}/obtener_producto/tamanio/${tamanio}`)
       .pipe(
         catchError((error) => {
           if (error.status === 404) {
@@ -50,12 +59,12 @@ export class ProductoService {
           }
           return this.handleError(error);
         }),
-        // Handle the nested 'tamanios' object in the response
+        // Manejar la estructura de respuesta específica para tamaños
         map(response => {
           if (response && 'tamanios' in response) {
-            return response.tamanios as Producto[];
+            return response.tamanios;
           }
-          return response as Producto[];
+          return response;
         })
       );
   }

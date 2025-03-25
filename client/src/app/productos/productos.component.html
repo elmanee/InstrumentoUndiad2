@@ -36,22 +36,6 @@
 
       <div class="filter-body" [ngClass]="{'filter-expanded': mostrarFiltros}">
         <div class="row mb-3">
-          <!-- Filtro por código -->
-          <div class="col-md-4 col-lg-3 mb-3">
-            <label class="form-label"><i class="fas fa-barcode me-2"></i>Código</label>
-            <div class="input-group">
-              <span class="input-group-text bg-white border-end-0">
-                <i class="fas fa-search text-muted"></i>
-              </span>
-              <input
-                type="text"
-                class="form-control border-start-0"
-                placeholder="Código de barras"
-                [(ngModel)]="codigoBusqueda"
-                (keyup.enter)="buscarPorCodigo()">
-            </div>
-          </div>
-
           <!-- Filtro por nombre -->
           <div class="col-md-4 col-lg-3 mb-3">
             <label class="form-label"><i class="fas fa-font me-2"></i>Nombre</label>
@@ -71,9 +55,26 @@
           <!-- Filtro por marca -->
           <div class="col-md-4 col-lg-3 mb-3">
             <label class="form-label"><i class="fas fa-tag me-2"></i>Marca</label>
-            <select class="form-select" [(ngModel)]="marcaSeleccionada" (change)="filtrarProductos()">
+            <select class="form-select" [(ngModel)]="filtros.marca" (change)="filtrarProductos()">
               <option value="">Todas las marcas</option>
-              <option *ngFor="let marca of marcas" [value]="marca">{{ marca }}</option>
+              <option *ngFor="let marca of marcasDisponibles" [value]="marca">{{ marca }}</option>
+            </select>
+          </div>
+
+          <div class="col-md-6 col-lg-4">
+            <label class="form-label">Tamaño</label>
+            <select
+              class="form-select"
+              [(ngModel)]="filtros.tamano"
+              (change)="aplicarFiltros()"
+            >
+              <option value="">Todos los tamaños</option>
+              <option
+                *ngFor="let tamano of tamanosDisponibles"
+                [value]="tamano"
+              >
+                {{ tamano }}
+              </option>
             </select>
           </div>
 

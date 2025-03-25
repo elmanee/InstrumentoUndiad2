@@ -54,22 +54,21 @@ export const obtenerProductosNombre = async (req: Request, res: Response): Promi
 }
 
 /obtiene producto por tamaño- cliente MEJORARRRRR/
-export const obtenerProductosTamanio = async (req: Request, res: Response):Promise<void> => {
+export const obtenerProductosTamanio = async (req: Request, res: Response): Promise<void> => {
   const { tamanio } = req.params;
-
   try {
-    const tamanios = await Producto.find({
-      tamanio: {$regex: new RegExp(tamanio,'i')},
+    const productos = await Producto.find({
+      tamanio: { $regex: new RegExp(tamanio, 'i') },
       estatus: "activo"
     });
-
-    if(tamanios.length === 0){
-      res.status(404).json({ message: `No existen productos con este tamaño ${tamanio}`})
+    if (productos.length === 0) {
+      res.status(404).json({ message: `No existen productos con este tamaño ${tamanio}` });
+      return;
     }
-
-    res.status(200).json({tamanios})
-  } catch (error:any) {
-    res.status(500).json({ message: error.message})
+    // Devolver con la estructura esperada
+    res.status(200).json({ lista: productos });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
   }
 }
 
@@ -135,4 +134,28 @@ export const obtenerProductosMarca = async (req: Request, res:Response): Promise
   } catch (error:any) {
     res.status(500).json({ message: error.message})
   }
+}
+
+export const getProductsByCodigo = async (req: Request, res: Response): Promise<void> => {
+  const { codigo_barras } = req.params;
+  
+    try {
+      const producto = await Producto.find({ 
+        codigo_barras: {$regex: new RegExp(codigo_barras, 'i')},
+        estatus: "activo"
+      });
+
+      if(producto.length === 0){
+        res.status(404).json({ message: `No existe la prodcutos con ${codigo_barras}`})
+        return
+      }
+
+      res.status(200).json({
+        message: 'Prodcutos encontradss',
+        lista: producto
+      });
+
+    } catch (error : any) {
+      res.status(500).json({ message: error.message});
+    }
 }

@@ -14,10 +14,9 @@ export interface Producto {
   imagen: string;
   codigo_barras: string;
   estatus: string;
-  // Nuevas propiedades
-  pasillo?: string;           // Opcional con ?
-  existencia_exhibe?: number; // Opcional con ?
-  precio_caja?: number;       // Opcional con ?
+  pasillo?: string;
+  existencia_exhibe?: number;
+  precio_caja?: number;
 }
 
 export interface ProductoResponse {
@@ -42,7 +41,6 @@ export class ClienteService {
     return this.http.get<ProductoResponse>(`${this.APIURL}/obtener_productos/cliente/nombre/${nombre}`);
   }
 
-  // Corregir la URL y la estructura de respuesta
   obtenerProductosPorTamanio(tamanio: string): Observable<ProductoResponse> {
     return this.http.get<ProductoResponse>(`${this.APIURL}/obtener_productos/cliente/tamanio/${tamanio}`);
   }
@@ -55,8 +53,13 @@ export class ClienteService {
     return this.http.get<ProductoResponse>(`${this.APIURL}/obtener_productos/cliente/marca/${marca}`);
   }
 
-  getProductByCodigo(codifo_barras: string): Observable<ProductoResponse> {
-    return this.http.get<ProductoResponse>(`${this.APIURL}/obtener_productos/cliente/marca/${codifo_barras}`);
+  // In your ClienteService
+  getProductByCodigo(codigo: string): Observable<ProductoResponse> {
+    return this.http.get<ProductoResponse>(
+      `${this.APIURL}/obtener_productos/cliente/codigo/${codigo}`
+    );
   }
+
+
 
 }
