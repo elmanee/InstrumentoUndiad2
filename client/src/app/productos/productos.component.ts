@@ -46,7 +46,7 @@ export class ProductosComponent implements OnInit {
     marca: '',
     pasillo: '',
     codigoBarras: '',
-    nombreProducto: ''
+    nombreProducto: '',
   };
 
   // Variables para productos
@@ -98,7 +98,6 @@ export class ProductosComponent implements OnInit {
     }, 500);
   }
 
-
   cargarProductos(): void {
     this.cargando = true;
     this.errorCarga = false;
@@ -118,6 +117,7 @@ export class ProductosComponent implements OnInit {
 
           // Extraer valores únicos para filtros
           this.obtenerValoresUnicos();
+          console.log('Lista de productos cargados:', this.productos);
         },
         error: (error) => {
           this.errorCarga = true;
@@ -128,8 +128,6 @@ export class ProductosComponent implements OnInit {
   }
 
   obtenerValoresUnicos(): void {
-    // Existing code for marcas and pasillos...
-
     this.tamanios = [
       ...new Set(
         this.productos
@@ -140,7 +138,27 @@ export class ProductosComponent implements OnInit {
       .filter((tamanio): tamanio is string => tamanio !== undefined)
       .sort();
 
-    // Copy to tamanosDisponibles
+    this.pasillos = [
+      ...new Set(
+        this.productos
+          .filter((producto) => producto.pasillo)
+          .map((producto) => producto.pasillo)
+      ),
+    ]
+      .filter((pasillo): pasillo is string => pasillo !== undefined)
+      .sort();
+
+    this.marcasDisponibles = [
+      ...new Set(
+        this.productos
+          .filter((producto) => producto.marca)
+          .map((producto) => producto.marca)
+      ),
+    ]
+      .filter((marca): marca is string => marca !== undefined)
+      .sort();
+
+    // copia a damaños disponibles
     this.tamanosDisponibles = [...this.tamanios];
   }
 
@@ -179,51 +197,16 @@ export class ProductosComponent implements OnInit {
       });
   }
 
-  buscarPorCodigo(): void {
-    if (!this.filtros.codigoBarras) {
-      this.limpiarFiltros();
-      return;
-    }
-
-    this.cargando = true;
-    this.clienteService
-      .getProductByCodigo(this.filtros.codigoBarras)
-      .pipe(
-        finalize(() => {
-          this.cargando = false;
-        })
-      )
-      .subscribe({
-        next: (response: ProductoResponse) => {
-          if (response && response.lista) {
-            this.productosFiltrados = response.lista;
-            this.resetearPaginacion();
-          } else {
-            console.error('Formato de respuesta inesperado:', response);
-            // Use the existing method
-            this.aplicarFiltros();
-          }
-        },
-        error: (error) => {
-          console.error('Error buscando por código', error);
-          // Fallback a búsqueda local
-          this.productosFiltrados = this.productos.filter((producto) =>
-            producto.codigo_barras.includes(this.filtros.codigoBarras)
-          );
-          this.resetearPaginacion();
-        },
-      });
-  }
 
   filtrarPorMarca(): void {
-    if (!this.marcaSeleccionada) {
-      this.limpiarFiltros();
+    if (!this.filtros.marca) {
+      this.cargarProductos();
       return;
     }
 
     this.cargando = true;
     this.clienteService
-      .obtenerProductosPorMarca(this.marcaSeleccionada)
+      .obtenerProductosPorMarca(this.filtros.marca)  // Cambiado de marcaSeleccionada
       .pipe(
         finalize(() => {
           this.cargando = false;
@@ -236,12 +219,47 @@ export class ProductosComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error filtrando por marca', error);
-          // Fallback a filtrado local
-          this.aplicarFiltros();
+          this.productosFiltrados = this.productos.filter(
+            (producto) => producto.marca === this.filtros.marca
+          );
+          this.resetearPaginacion();
         },
       });
+      console.log('Filtrando por marca:', this.filtros.marca);
+
   }
 
+  filtrarPorPasillo(): void {
+    if (!this.filtros.pasillo) {
+      this.cargarProductos();
+      return;
+    }
+
+    this.cargando = true;
+    this.clienteService
+      .getProductByPasillos(this.filtros.pasillo)  // Nombre corregido
+      .pipe(
+        finalize(() => {
+          this.cargando = false;
+        })
+      )
+      .subscribe({
+        next: (response: ProductoResponse) => {
+          this.productosFiltrados = response.lista;
+          this.resetearPaginacion();
+        },
+        error: (error) => {
+          console.error('Error filtrando por pasillo', error);
+          this.productosFiltrados = this.productos.filter(
+            (producto) => producto.pasillo === this.filtros.pasillo
+          );
+          this.resetearPaginacion();
+        },
+      });
+      console.log('Filtrando por pasillo:', this.filtros.pasillo);
+
+
+  }
 
   actualizarRangoPrecio(): void {
     // Asegurar que el precio mínimo nunca sea mayor que el máximo
@@ -302,6 +320,7 @@ export class ProductosComponent implements OnInit {
       });
   }
 
+
   aplicarFiltros(): void {
     // Si hay filtro específico de tamaño, usamos ese método
     if (this.filtros.tamano) {
@@ -313,6 +332,11 @@ export class ProductosComponent implements OnInit {
       this.filtrarPorMarca();
       return;
     }
+    if (this.filtros.pasillo) {
+      this.filtrarPorPasillo();
+      return;
+    }
+
 
     if (this.precioMin > 0 || this.precioMax < 2000) {
       this.filtrarPorPrecio();
@@ -359,8 +383,12 @@ export class ProductosComponent implements OnInit {
 
       // Todos los filtros deben coincidir
       return (
-        nombreMatch && codigoMatch && marcaMatch && pasilloMatch &&
-        tamanioMatch && precioMatch
+        nombreMatch &&
+        codigoMatch &&
+        marcaMatch &&
+        pasilloMatch &&
+        tamanioMatch &&
+        precioMatch
       );
     });
 
@@ -377,7 +405,7 @@ export class ProductosComponent implements OnInit {
       codigoBarras: '',
       nombreProducto: '',
       marca: '',
-      pasillo: ''
+      pasillo: '',
     };
 
     this.precioMin = 0;
@@ -399,8 +427,7 @@ export class ProductosComponent implements OnInit {
 
       if (this.modalDetalle) {
         this.modalDetalle.show();
-      }
-      else if (modalElement) {
+      } else if (modalElement) {
         this.modalDetalle = new bootstrap.Modal(modalElement);
         this.modalDetalle.show();
       } else {
@@ -465,10 +492,14 @@ export class ProductosComponent implements OnInit {
     return this.productosFiltrados.slice(inicio, fin);
   }
 
-
   filtrarProductos(): void {
-    if (this.marcaSeleccionada) {
+    if (this.filtros.marca) {
       this.filtrarPorMarca();
+      return;
+    }
+
+    if (this.filtros.pasillo) {
+      this.filtrarPorPasillo();
       return;
     }
 

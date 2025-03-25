@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
+import { catchError, throwError } from 'rxjs';
 
 export interface Producto {
   nombre_producto: string;
@@ -11,6 +11,7 @@ export interface Producto {
   precio_pieza: number;
   precio_kg: number;
   cantidad: number;
+  categoria: string;
   imagen: string;
   codigo_barras: string;
   estatus: string;
@@ -53,11 +54,14 @@ export class ClienteService {
     return this.http.get<ProductoResponse>(`${this.APIURL}/obtener_productos/cliente/marca/${marca}`);
   }
 
-  // In your ClienteService
-  getProductByCodigo(codigo: string): Observable<ProductoResponse> {
-    return this.http.get<ProductoResponse>(
-      `${this.APIURL}/obtener_productos/cliente/codigo/${codigo}`
-    );
+  getProductByPasillos(pasillo: string): Observable<ProductoResponse> {
+    return this.http.get<ProductoResponse>(`${this.APIURL}/obtener_productos/cliente/pasillo/${pasillo}`)
+      .pipe(
+        catchError((error) => {
+          console.error('Error al obtener productos por pasillo', error);
+          return throwError(() => error);
+        })
+      );
   }
 
 

@@ -81,7 +81,7 @@
           <!-- Filtro por pasillo -->
           <div class="col-md-4 col-lg-3 mb-3">
             <label class="form-label"><i class="fas fa-map-marker-alt me-2"></i>Pasillo</label>
-            <select class="form-select" [(ngModel)]="pasilloSeleccionado" (change)="filtrarProductos()">
+            <select class="form-select" [(ngModel)]="filtros.pasillo" (change)="filtrarProductos()">
               <option value="">Todos los pasillos</option>
               <option *ngFor="let pasillo of pasillos" [value]="pasillo">{{ pasillo }}</option>
             </select>
@@ -375,8 +375,6 @@
                 class="product-detail-image"
                 [alt]="productoSeleccionado.nombre_producto"
                 onerror="this.src='assets/img/placeholder.png'">
-
-
             </div>
           </div>
 
@@ -401,6 +399,12 @@
                 <span class="detail-icon"><i class="fas fa-box"></i></span>
                 <span class="detail-label">Tamaño:</span>
                 <span class="detail-value">{{ productoSeleccionado.tamanio }}</span>
+              </div>
+
+              <div class="detail-item" *ngIf="productoSeleccionado.categoria">
+                <span class="detail-icon"><i class="fas fa-tags"></i></span>
+                <span class="detail-label">Categora:</span>
+                <span class="detail-value">{{ productoSeleccionado.categoria }}</span>
               </div>
 
               <div class="detail-item" *ngIf="productoSeleccionado.pasillo">

@@ -665,6 +665,19 @@
   margin-bottom: 0.5rem;
 }
 
+.product-details {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 8px 0;
+  padding: 8px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+
+
 .product-details p {
   font-size: 0.9rem;
   color: var(--gray);
@@ -684,7 +697,14 @@
 }
 
 .detail-item {
+
   margin-bottom: 0.75rem;
+}
+.detail-item i{
+  margin-right: 8px;
+  color: #6c757d;
+  width: 16px;
+  text-align: center;
 }
 
 .detail-label {
@@ -697,7 +717,8 @@
 
 .detail-value {
   font-weight: 500;
-  color: #212529;
+  margin-left: 5px;
+  color: #343a40;
 }
 
 /* Responsividad */

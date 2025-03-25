@@ -136,17 +136,17 @@ export const obtenerProductosMarca = async (req: Request, res:Response): Promise
   }
 }
 
-export const getProductsByCodigo = async (req: Request, res: Response): Promise<void> => {
-  const { codigo_barras } = req.params;
+export const getProductsByPaillo  = async (req: Request, res: Response): Promise<void> => {
+  const { pasillo } = req.params;
   
     try {
       const producto = await Producto.find({ 
-        codigo_barras: {$regex: new RegExp(codigo_barras, 'i')},
+        pasillo: pasillo ,
         estatus: "activo"
       });
 
       if(producto.length === 0){
-        res.status(404).json({ message: `No existe la prodcutos con ${codigo_barras}`})
+        res.status(404).json({ message: `No existe la prodcutos con ${pasillo}`})
         return
       }
 
