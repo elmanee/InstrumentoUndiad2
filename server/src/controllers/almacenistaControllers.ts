@@ -71,10 +71,11 @@ export const obtenerProductoPorCodigo = async (req: Request, res: Response): Pro
   const { codigo_barras } = req.params;
 
   try {
-    const producto = await Producto.findOne({ codigo_barras});
+    const producto = await Producto.findOne({ codigo_barras });
+    
     if(producto){
       res.status(200).json(producto);
-    }else{
+    } else {
       res.status(404).json({ message: 'El producto no existe'});
     }
   } catch (error : any) {

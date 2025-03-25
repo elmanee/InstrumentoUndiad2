@@ -2,7 +2,7 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, throwError  } from 'rxjs';
+import { Observable, throwError, tap  } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 
@@ -47,7 +47,15 @@ export class AlmacenistaService {
 
   // Método para obtener un producto por código de barras
   obtenerProductoPorCodigo(codigo_barras: string): Observable<Producto> {
-    return this.http.get<Producto>(`${this.APIURL}/obtener_producto/codigo/${codigo_barras}`);
+    console.log(`Buscando producto con código: ${codigo_barras}`);
+    return this.http.get<Producto>(`${this.APIURL}/obtener_producto/codigo/${codigo_barras}`)
+      .pipe(
+        tap(response => console.log('Respuesta:', response)),
+        catchError(error => {
+          console.error('Error al obtener producto:', error);
+          return throwError(() => error);
+        })
+      );
   }
 
   // Método para obtener productos por categoría
