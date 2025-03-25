@@ -1,14 +1,6 @@
 /* almacenista.component.css - Estilos para la pantalla del almacenista */
 
-.dashboard-container {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
 
-.header {
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
 
 :root {
   --primary: #d62828;
@@ -20,29 +12,13 @@
   --white: #ffffff;
 }
 
+/* Header y Navegación */
 .header {
   background: linear-gradient(to right, var(--secondary), var(--primary-dark));
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
   position: sticky;
   top: 0;
   z-index: 1000;
-}
-
-.header-container {
-  padding: 0;
-}
-
-.header-wrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  flex-wrap: wrap;
-}
-
-.branding {
-  display: flex;
-  align-items: center;
 }
 
 .header-logo {
@@ -54,26 +30,12 @@
   padding: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   margin-right: 1rem;
-  transition: all 0.3s ease;
-  background-color: white
-
+  transition: var(--transition);
+  background-color: white;
 }
 
 .header-logo:hover {
   transform: scale(1.1);
-}
-
-.header-title {
-  color: var(--white);
-  font-size: 1.6rem;
-  font-weight: 700;
-  margin: 0;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-.title {
-  font-size: 1.5rem;
-  font-weight: 500;
 }
 
 .main-nav {
@@ -83,7 +45,7 @@
 
 .nav-link {
   padding: 0.5rem 1rem;
-  transition: all 0.3s ease;
+  transition: var(--transition);
 }
 
 .nav-link:hover {
@@ -91,14 +53,30 @@
   transform: translateY(-2px);
 }
 
-
-
 .nav-link i {
   margin-right: 0.5rem;
 }
 
-.nav-links .nav-item .nav-link.active {
-  background-color: rgba(255, 255, 255, 0.15);
+
+/* Encabezado del inventario */
+.inventory-header {
+  background-color: var(--white, #ffffff);
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.inventory-title {
+  color: var(--secondary, #6c757d);
+  font-weight: 600;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.inventory-title i {
+  color: var(--primary, #007bff);
+  margin-right: 0.75rem;
 }
 
 @media (max-width: 768px) {

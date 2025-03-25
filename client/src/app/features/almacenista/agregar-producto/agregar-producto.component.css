@@ -262,8 +262,8 @@
 }
 
 .btn-guardar {
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  color: white;
+  background:  #b21e1e;
+  color: black;
   font-weight: 600;
   padding: 0.9rem 3rem;
   border-radius: 50px;
