@@ -9,13 +9,14 @@ import { ProductosComponent } from './productos/productos.component';
 import { VendedorPasilloComponent } from './vendedor-pasillo/vendedor-pasillo.component';
 
 const routes: Routes = [
-  { path: 'almacenista', component: AlmacenistaComponent },
-  { path: 'inventario', component: InventarioComponent },
-  { path: 'agregar-productos', component: AgregarProductoComponent },
-  { path: 'cliente', component: ProductosComponent },
-  { path: 'vendedor-pasillo', component: VendedorPasilloComponent },
+  { path: 'almacenista', component: AlmacenistaComponent, data: { title: 'Almacenista' } },
+  { path: 'inventario', component: InventarioComponent, data: { title: 'Inventario' } },
+  { path: 'agregar-productos', component: AgregarProductoComponent, data: { title: 'Agregar Productos' } },
+  { path: 'cliente', component: ProductosComponent, data: { title: 'Cliente' } },
+  { path: 'vendedor-pasillo', component: VendedorPasilloComponent, data: { title: 'Vendedor de Pasillo' } },
   { path: '', redirectTo: '/almacenista', pathMatch: 'full' }
 ];
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

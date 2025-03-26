@@ -1,4 +1,8 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
+import { filter, map } from 'rxjs/operators';
+
 
 @Component({
     selector: 'app-root',
@@ -7,5 +11,18 @@ import { Component } from '@angular/core';
     standalone: false
 })
 export class AppComponent {
-  title = 'client';
+  constructor(private router: Router, private titleService: Title, private route: ActivatedRoute) {
+    this.router.events
+      .pipe(
+        filter(event => event instanceof NavigationEnd),
+        map(() => {
+          let child = this.route.firstChild;
+          while (child?.firstChild) {
+            child = child.firstChild;
+          }
+          return child?.snapshot.data['title'] || 'Mi Aplicación';
+        })
+      )
+      .subscribe(title => this.titleService.setTitle(title));
+  }
 }
